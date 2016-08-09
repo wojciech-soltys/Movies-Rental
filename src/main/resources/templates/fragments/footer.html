@@ -1,0 +1,13 @@
+<footer th:fragment="footer">
+    <div class="uui-footer">
+        <div class="footer-logo-copyright">
+            <div class="epam-logo">
+                <img src="/images/Logo_Epam_Color.svg" alt="" />
+            </div>
+            <p class="copyright" th:inline="text">© [[${#dates.year(#dates.createNow())}]] Movie Rental. All Rights Reserved.</p>
+        </div>
+        <div class="footer-build">
+            <p class="build">Build version v <span>2.0.0.1</span></p>
+        </div>
+    </div>
+</footer>
