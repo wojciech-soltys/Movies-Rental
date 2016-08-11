@@ -8,6 +8,8 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import java.util.List;
+
 public class FilmRepositoryTest extends MovieRentalTest {
 
     @Autowired
@@ -15,12 +17,11 @@ public class FilmRepositoryTest extends MovieRentalTest {
 
     @BeforeMethod
     public void setUp() throws Exception {
-
     }
 
     @AfterMethod
     public void tearDown() throws Exception {
-
+        repository.deleteAll();
     }
 
     @Test
@@ -33,6 +34,18 @@ public class FilmRepositoryTest extends MovieRentalTest {
         long movieCount = repository.count();
 
         Assertions.assertThat(movieCount).isEqualTo(2l);
+    }
+
+    @Test
+    public void testGetAllFilms() throws Exception {
+        Film film1 = new Film(1L, "title1", "description1", 2016, 100);
+        repository.save(film1);
+        Film film2 = new Film(2L, "title2", "description2", 2016, 200);
+        repository.save(film2);
+
+        List<Film> films = repository.findAll();
+
+        Assertions.assertThat(films.size()).isEqualTo(2);
     }
 
 }

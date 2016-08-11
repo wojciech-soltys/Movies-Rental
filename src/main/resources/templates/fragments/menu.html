@@ -2,13 +2,13 @@
     <div class="uui-side-bar">
         <ul class="sidebar-menu">
             <li>
-                <a href="#">
-                    <span>Item 1</span>
+                <a th:href="@{/}">
+                    <span>Index</span>
                 </a>
             </li>
-            <li class="active">
-                <a href="#">
-                    <span>Item 2</span>
+            <li th:classappend="${(#httpServletRequest.requestURL.toString().contains('movies')) ? 'active' : ''}">
+                <a th:href="@{/movies}">
+                    <span>Movies</span>
                 </a>
             </li>
             <li>

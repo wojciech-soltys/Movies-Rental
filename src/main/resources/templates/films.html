@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html layout:decorator="fragments/layout">
+<head>
+    <title>Index</title>
+</head>
+<body>
+
+<div layout:fragment="content">
+    <main>
+        <br/>
+        Movies list!<br/>
+        <table style="width:100%">
+            <tr>
+                <th>Title</th>
+                <th>Description</th>
+                <th>Release Year</th>
+                <th>Length</th>
+            </tr>
+            <tr th:each="film: ${films}">
+                <td th:text="${film.title}" />
+                <td th:text="${film.description}" />
+                <td th:text="${film.release_year}" />
+                <td th:text="${film.length}" />
+            </tr>
+        </table>
+    </main>
+</div>
+
+</body>
+</html>
