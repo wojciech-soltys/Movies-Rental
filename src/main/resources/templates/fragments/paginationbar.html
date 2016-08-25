@@ -1,0 +1,28 @@
+<!-- Pagination Bar -->
+<div th:fragment='paginationbar'>
+    <div style="float:center;  height:100%; width: 500px; margin-left: auto ;margin-right: auto;">
+        <ul style="list-style-type: none;">
+            <li th:class="${page.firstPage? 'disabled' : ''}" style="float:left;">
+                <span th:if="${page.firstPage}" class="uui-button">← First</span>
+            <a th:if='${not page.firstPage}' th:href="@{${page.url}(page=1,size=${page.size})}" class="uui-button">← First</a>
+            </li>
+            <li th:class="${page.hasPreviousPage}? '' : 'disabled'" style="float:left;">
+                <span th:if='${not page.hasPreviousPage}' class="uui-button">«</span>
+                <a th:if='${page.hasPreviousPage}' th:href='@{${page.url}(page=${page.number-1},size=${page.size})}' title='Go to previous page' class="uui-button">«</a>
+            </li>
+            <li th:each='item : ${page.items}' style="float:left;">
+                <span th:if='${item.current}' th:text="${item.number}" th:class="${item.current? 'uui-button blue' : 'uui-button'}">1</span>
+                <a th:if='${not item.current}' th:href="@{${page.url}(page=${item.number},size=${page.size})}">
+                    <span th:text='${item.number}' th:class="${item.current? 'uui-button blue' : 'uui-button'}">1</span></a>
+            </li>
+            <li th:class="${page.hasNextPage}? '' : 'disabled'" style="float:left;">
+                <span th:if='${not page.hasNextPage}'>»</span>
+                <a th:if='${page.hasNextPage}' th:href='@{${page.url}(page=${page.number+1},size=${page.size})}' title='Go to next page' class="uui-button">»</a>
+            </li>
+            <li th:class="${page.lastPage}? 'disabled' : ''">
+                <span th:if="${page.lastPage}" class="uui-button">Last →</span>
+                <a th:if='${not page.lastPage}' th:href='@{${page.url}(page=${page.totalPages},size=${page.size})}' class="uui-button">Last →</a>
+            </li>
+        </ul>
+    </div>
+</div>

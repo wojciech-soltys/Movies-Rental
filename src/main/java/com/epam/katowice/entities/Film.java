@@ -23,7 +23,6 @@ public class Film {
 
     private Integer length;
 
-    //@Enumerated(EnumType.STRING)
     @Convert(converter = RatingConverter.class)
     private Rating rating;
 

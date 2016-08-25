@@ -9,12 +9,15 @@ import org.assertj.core.api.Assertions;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.springframework.data.domain.*;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.util.Arrays;
 import java.util.List;
+
+import static org.mockito.Matchers.any;
 
 /**
  * Created by Wojciech_Soltys on 09.08.2016.
@@ -90,6 +93,28 @@ public class FilmServiceImplTest extends MovieRentalTest {
         //Length
         Assertions.assertThat(film1.getLength()).isEqualTo(FilmDto1.getLength());
         Assertions.assertThat(film2.getLength()).isEqualTo(FilmDto2.getLength());
+    }
+
+    @Test
+    public void testGetPageOfFilms() throws Exception {
+        Film film1 = new Film(1L, "title1", "description1", 2016, 100);
+        repository.save(film1);
+        Film film2 = new Film(2L, "title2", "description2", 2016, 200);
+        repository.save(film2);
+
+        Pageable pageRequest = new PageRequest(0,10, Sort.Direction.DESC, "title");
+        Pageable pageRequest1 = new PageRequest(0,10, Sort.Direction.ASC, "title");
+
+        Mockito.when(repository.findAll(pageRequest)).thenReturn(new PageImpl<>(Arrays.asList(film1,film2)));
+        Mockito.when(repository.findAll(pageRequest1)).thenReturn(new PageImpl<>(Arrays.asList(film2,film1)));
+
+        Page<Film> page = repository.findAll(pageRequest);
+        Assertions.assertThat(page.getContent().size()).isEqualTo(2);
+        Assertions.assertThat(page.getContent().get(0).getTitle()).isEqualTo("title1");
+
+        page = repository.findAll(pageRequest1);
+        Assertions.assertThat(page.getContent().size()).isEqualTo(2);
+        Assertions.assertThat(page.getContent().get(0).getTitle()).isEqualTo("title2");
     }
 
 }

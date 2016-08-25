@@ -6,8 +6,14 @@ import com.epam.katowice.entities.Film;
 import com.epam.katowice.mappers.FilmMapper;
 import fr.xebia.extras.selma.Selma;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.convert.converter.Converter;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -17,6 +23,7 @@ import java.util.stream.Collectors;
 @Service
 public class FilmServiceImpl implements FilmService {
 
+    private static final int PAGE_SIZE = 50;
     private final FilmRepository filmRepository;
 
     @Autowired
@@ -33,5 +40,13 @@ public class FilmServiceImpl implements FilmService {
     public List<FilmDto> getAllFilms() {
         FilmMapper mapper = Selma.builder(FilmMapper.class).build();
         return filmRepository.findAll().stream().map(mapper::asFilmDto).collect(Collectors.toList());
+    }
+
+    @Override
+    public Page<Film> getPageOfFilms(Pageable pageable) {
+        FilmMapper mapper = Selma.builder(FilmMapper.class).build();
+        PageRequest pageRequest =
+                new PageRequest(pageable.getPageNumber(), pageable.getPageSize(), Sort.Direction.DESC, "title");
+        return filmRepository.findAll(pageable);
     }
 }

@@ -22,6 +22,10 @@ public enum Rating {
     }
 
     public static Rating fromCode(String code) {
+        if (code == null) {
+            return null;
+        }
+
         for (Rating rating : Rating.values()) {
             if (rating.getRating().equalsIgnoreCase(code)) {
                 return rating;
