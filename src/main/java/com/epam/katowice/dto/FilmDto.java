@@ -1,5 +1,7 @@
 package com.epam.katowice.dto;
 
+import com.epam.katowice.entities.Rating;
+
 import java.sql.Date;
 
 /**
@@ -16,6 +18,16 @@ public class FilmDto {
     private int release_year;
 
     private Integer length;
+
+    private Rating rating;
+
+    public Rating getRating() {
+        return rating;
+    }
+
+    public void setRating(Rating rating) {
+        this.rating = rating;
+    }
 
     public FilmDto() {
 

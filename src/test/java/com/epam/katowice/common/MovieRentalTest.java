@@ -1,6 +1,7 @@
 package com.epam.katowice.common;
 
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.web.config.EnableSpringDataWebSupport;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 
@@ -10,6 +11,7 @@ import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 
 @SpringBootTest
 @ActiveProfiles("test")
+@EnableSpringDataWebSupport
 public class MovieRentalTest extends AbstractTestNGSpringContextTests {
 
 }
