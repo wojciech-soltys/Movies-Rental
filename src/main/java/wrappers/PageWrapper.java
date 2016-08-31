@@ -12,6 +12,7 @@ import java.util.List;
  */
 public class PageWrapper<T> {
     public static final int MAX_PAGE_ITEM_DISPLAY = 5;
+
     private Page<T> page;
     private List<PageItem> items;
     private int currentNumber;
@@ -52,6 +53,14 @@ public class PageWrapper<T> {
         for (int i = 0; i<size; i++){
             items.add(new PageItem(start+i, (start+i)==currentNumber));
         }
+    }
+
+    public Page<T> getPage() {
+        return page;
+    }
+
+    public void setPage(Page<T> page) {
+        this.page = page;
     }
 
     public List<PageItem> getItems(){

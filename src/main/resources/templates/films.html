@@ -5,28 +5,110 @@
 </head>
 <body>
 
+
 <div layout:fragment="content">
 
+    <form action="/movies" th:object="${filters}" method="get">
+        <div>
+            <span class="uui-label">Title:</span>
+            <input type="text" class="uui-form-element" th:field="*{title}" />
+        </div>
+        <div>
+            <span class="uui-label">Release Year:</span>
+            <span>
+            <div class="uui-slider range" style="width:250px"></div>
+                <div class="slider-info one">
+                    Range:
+                    <span>1950 - 2016</span>
+                </div>
+                <input type="hidden" th:field="*{release_year_from}" />
+                <input type="hidden" th:field="*{release_year_to}" />
+            </span>
+        </div>
+        <div>
+            <span class="uui-label">Category:</span>
+            <select th:field="*{category}">
+                <option value="Any">Any</option>
+                <option th:each="category : ${categories}" th:value="${category.name}" th:text="${category.name}"/>
+            </select>
+        </div>
+        <div>
+            <span class="uui-label">Language:</span>
+            <select th:field="*{language}">
+                <option th:each="language : ${languages}" th:value="${language.name}" th:text="${language.name}"/>
+            </select>
+        </div>
+
+        <span class="uui-label">Max Length:</span>
+        <div class="uui-slider max-range" style="width:250px;"></div>
+            <div class="slider-info two">
+                Value:
+                <span>180</span>
+            </div>
+        <input type="hidden" th:field="*{maxLength}" value="180"/>
+
+        <div>
+            <span class="uui-label">Actor:</span>
+            <input type="text" class="uui-form-element" th:field="*{actor}"/>
+        </div>
+
+        <button class="uui-button" type="submit">Search</button>
     <table style="width:100%" class="table table-striped table-hover">
         <thead>
         <tr>
-            <th><a class="sorted" sd:pagination-sort="title" >Title</a></th>
-            <th>Description</th>
-            <th>Release Year</th>
-            <th>Length</th>
+            <th><a th:href="@{${page.url}(sort=(${page?.page?.sort?.getOrderFor('title')?.ascending} ? 'title,desc' : 'title,asc'),page=${page.number},size=${page.size})}">Title</a></th>
+            <th><a th:href="@{${page.url}(sort=(${page?.page?.sort?.getOrderFor('description')?.ascending} ? 'description,desc' : 'description,asc'),page=${page.number},size=${page.size})}">Description</a></th>
+            <th><a th:href="@{${page.url}(sort=(${page?.page?.sort?.getOrderFor('releaseYear')?.ascending} ? 'releaseYear,desc' : 'releaseYear,asc'),page=${page.number},size=${page.size})}">Release Year</a></th>
+            <th><a th:href="@{${page.url}(sort=(${page?.page?.sort?.getOrderFor('length')?.ascending} ? 'length,desc' : 'length,asc'),page=${page.number},size=${page.size})}">Length</a></th>
         </tr>
         </thead>
         <tbody>
         <tr th:each="film : ${page.content}">
             <td th:text="${film.title}" />
             <td th:text="${film.description}" />
-            <td th:text="${film.release_year}" />
+            <td th:text="${film.releaseYear}" />
             <td th:text="${film.length}" />
         </tr>
         </tbody>
     </table>
     <div th:replace="fragments/paginationbar :: paginationbar"></div>
-</div>
+    </form>
+    <script>
+        $(document).ready(function () {
+            $('.uui-slider').slider();
+        });
 
+       $('.uui-slider.range').each(
+            function() {
+                $(this).slider({
+                    range: true,
+                    min: 1950,
+                    max: 2016,
+                    values: [1950, 2016],
+                    slide: function (event, ui) {
+                        $(this).siblings('.slider-info.one').find('span').text(ui.values[0] + "-" + ui.values[1]);
+                        $("input[name='release_year_from']").val(ui.values[0]);
+                        $("input[name='release_year_to']").val(ui.values[1]);
+                    }
+                });
+            }
+        );
+
+        $('.uui-slider.max-range').each(
+        function() {
+            $(this).slider({
+                range: 'max',
+                min: 40,
+                max: 200,
+                value: 180,
+                slide: function (event, ui) {
+                    $(this).siblings('.slider-info.two').find('span').text(ui.value);
+                    $("input[name='release_year_from']").val(ui.value);
+                }
+            });
+        }
+    );
+    </script>
+</div>
 </body>
 </html>

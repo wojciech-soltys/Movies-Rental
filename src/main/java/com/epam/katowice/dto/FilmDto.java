@@ -1,8 +1,11 @@
 package com.epam.katowice.dto;
 
+import com.epam.katowice.entities.Actor;
+import com.epam.katowice.entities.Category;
+import com.epam.katowice.entities.Language;
 import com.epam.katowice.entities.Rating;
 
-import java.sql.Date;
+import java.util.Set;
 
 /**
  * Created by Wojciech_Soltys on 10.08.2016.
@@ -15,11 +18,17 @@ public class FilmDto {
 
     private String description;
 
-    private int release_year;
+    private int releaseYear;
 
     private Integer length;
 
     private Rating rating;
+
+    private Set<Category> categories;
+
+    private Language language;
+
+    private Set<Actor> actors;
 
     public Rating getRating() {
         return rating;
@@ -33,11 +42,11 @@ public class FilmDto {
 
     }
 
-    public FilmDto(Long film_id, String title, String description, int release_year, Integer length) {
+    public FilmDto(Long film_id, String title, String description, int releaseYear, Integer length) {
         this.film_id = film_id;
         this.title = title;
         this.description = description;
-        this.release_year = release_year;
+        this.releaseYear = releaseYear;
         this.length = length;
     }
 
@@ -65,12 +74,12 @@ public class FilmDto {
         this.description = description;
     }
 
-    public int getRelease_year() {
-        return release_year;
+    public int getReleaseYear() {
+        return releaseYear;
     }
 
-    public void setRelease_year(int release_year) {
-        this.release_year = release_year;
+    public void setReleaseYear(int releaseYear) {
+        this.releaseYear = releaseYear;
     }
 
     public Integer getLength() {
@@ -79,5 +88,29 @@ public class FilmDto {
 
     public void setLength(Integer length) {
         this.length = length;
+    }
+
+    public Set<Category> getCategories() {
+        return categories;
+    }
+
+    public void setCategories(Set<Category> categories) {
+        this.categories = categories;
+    }
+
+    public Language getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(Language language) {
+        this.language = language;
+    }
+
+    public Set<Actor> getActors() {
+        return actors;
+    }
+
+    public void setActors(Set<Actor> actors) {
+        this.actors = actors;
     }
 }

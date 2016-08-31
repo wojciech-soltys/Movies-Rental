@@ -1,7 +1,7 @@
 package com.epam.katowice.entities;
 
-import java.sql.Date;
 import javax.persistence.*;
+import java.util.Set;
 
 /**
  * Created by Wojciech_Soltys on 09.08.2016.
@@ -19,23 +19,42 @@ public class Film {
     @Column(name = "description")
     private String description;
 
-    private int release_year;
+    @Column(name = "release_year")
+    private Integer releaseYear;
 
     private Integer length;
 
     @Convert(converter = RatingConverter.class)
     private Rating rating;
 
+    @ManyToMany
+    @JoinTable(name="film_category",
+            joinColumns={@JoinColumn(name="film_id")},
+            inverseJoinColumns={@JoinColumn(name="category_id")})
+    private Set<Category> categories;
+
+    @OneToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name="language_id")
+    private Language language;
+
+    @ManyToMany
+    @JoinTable(name="film_actor",
+            joinColumns={@JoinColumn(name="film_id")},
+            inverseJoinColumns={@JoinColumn(name="actor_id")})
+    private Set<Actor> actors;
+
+
     public Film() {
 
     }
 
-    public Film(Long film_id, String title, String description, int release_year, Integer length) {
+    public Film(Long film_id, String title, String description, Integer releaseYear, Integer length, Rating rating) {
         this.film_id = film_id;
         this.title = title;
         this.description = description;
-        this.release_year = release_year;
+        this.releaseYear = releaseYear;
         this.length = length;
+        this.rating = rating;
     }
 
     public Film(String title) {
@@ -66,12 +85,12 @@ public class Film {
         this.description = description;
     }
 
-    public int getRelease_year() {
-        return release_year;
+    public Integer getReleaseYear() {
+        return releaseYear;
     }
 
-    public void setRelease_year(int release_year) {
-        this.release_year = release_year;
+    public void setReleaseYear(Integer releaseYear) {
+        this.releaseYear = releaseYear;
     }
 
     public Integer getLength() {
@@ -88,5 +107,29 @@ public class Film {
 
     public void setRating(Rating rating) {
         this.rating = rating;
+    }
+
+    public Set<Category> getCategories() {
+        return categories;
+    }
+
+    public void setCategories(Set<Category> categories) {
+        this.categories = categories;
+    }
+
+    public Language getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(Language language) {
+        this.language = language;
+    }
+
+    public Set<Actor> getActors() {
+        return actors;
+    }
+
+    public void setActors(Set<Actor> actors) {
+        this.actors = actors;
     }
 }

@@ -1,7 +1,10 @@
 package com.epam.katowice.dao;
 
 import com.epam.katowice.common.MovieRentalTest;
+import com.epam.katowice.controllers.parameters.Filters;
 import com.epam.katowice.entities.Film;
+import com.epam.katowice.entities.Rating;
+import com.epam.katowice.entities.specifications.FilmSpecBuilder;
 import org.assertj.core.api.Assertions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -42,9 +45,9 @@ public class FilmRepositoryTest extends MovieRentalTest {
 
     @Test
     public void testGetAllFilms() throws Exception {
-        Film film1 = new Film(1L, "title1", "description1", 2016, 100);
+        Film film1 = new Film(1L, "title1", "description1", 2016, new Integer(100), Rating.NC17);
         repository.save(film1);
-        Film film2 = new Film(2L, "title2", "description2", 2016, 200);
+        Film film2 = new Film(2L, "title2", "description2", 2016, new Integer(200), Rating.NC17);
         repository.save(film2);
 
         List<Film> films = repository.findAll();
@@ -54,9 +57,9 @@ public class FilmRepositoryTest extends MovieRentalTest {
 
     @Test
     public void testGetFilmsPage() throws Exception {
-        Film film1 = new Film(1L, "title1", "description1", 2016, 100);
+        Film film1 = new Film(1L, "title1", "description1", 2016, new Integer(100), Rating.NC17);
         repository.save(film1);
-        Film film2 = new Film(2L, "title2", "description2", 2016, 200);
+        Film film2 = new Film(2L, "title2", "description2", 2016, new Integer(200), Rating.NC17);
         repository.save(film2);
 
         Pageable pageRequest = new PageRequest(0,10, Sort.Direction.DESC, "title");
@@ -71,5 +74,24 @@ public class FilmRepositoryTest extends MovieRentalTest {
         Assertions.assertThat(page.getContent().get(0).getTitle()).isEqualTo("title1");
     }
 
+    @Test
+    public void testFindFilms() throws Exception {
+        Film film1 = new Film(1L, "title1", "description1", 2014, new Integer(100), Rating.NC17);
+        repository.save(film1);
+        Film film2 = new Film(2L, "title2", "description2", 2016, new Integer(200), Rating.NC17);
+        repository.save(film2);
 
+        FilmSpecBuilder filmSpecBuilder = new FilmSpecBuilder();
+        Pageable pageRequest = new PageRequest(0,10, Sort.Direction.DESC, "title");
+        Filters filters = new Filters();
+        filters.setTitle("title1");
+
+        Page<Film> page = repository.findAll(filmSpecBuilder.toSpecification(filters),pageRequest);
+        Assertions.assertThat(page.getContent().size()).isEqualTo(1);
+        Assertions.assertThat(page.getContent().get(0).getTitle()).isEqualTo("title1");
+
+        filters.setTitle("title2");
+        page = repository.findAll(filmSpecBuilder.toSpecification(filters),pageRequest);
+        Assertions.assertThat(page.getContent().size()).isEqualTo(0);
+    }
 }
