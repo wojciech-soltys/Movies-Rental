@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html layout:decorator="fragments/layout">
+<head>
+    <title>Movies</title>
+</head>
+<body>
+
+<div layout:fragment="content">
+<div th:object="${film}">
+    <div><span class="uui-label">Title:</span> <span th:text="*{title}"/></div>
+    <div><span class="uui-label" style="float:left">Release Year:</span><span th:text="*{releaseYear}"/></div>
+    <div><span class="uui-label" style="float:left">Language:</span><span th:text="*{language.name}"/></div>
+    <div><span class="uui-label" style="float:left">Length:</span><span th:text="*{length}"/></div>
+    <div><span class="uui-label" style="float:left">Rating:</span><span th:text="*{rating}"/></div>
+
+    <div><span class="uui-label" style="float:left">Short Description:</span>
+    <textarea class="uui-form-element" th:text="*{description}"  rows="3" cols="20" disabled="disabled"/></div>
+
+    <div><span class="uui-label" style="float:left">Movie Description:</span>
+        <textarea class="uui-form-element" th:text="*{filmText.description}"  rows="3" cols="20" disabled="disabled"/></div>
+
+
+    <div><span class="uui-label" style="float:left">Categories:</span>
+        <ul class="uui-items-list small">
+            <li class="item-body" th:each="category : *{categories}">
+                <div class="item-section content">
+                    <span th:text="${category.name}"></span>
+                </div>
+            </li>
+        </ul>
+    </div>
+
+    <span class="uui-label">Actors:</span>
+    <ul class="uui-items-list small">
+        <li class="item-body" th:each="actor : *{actors}">
+            <div class="item-section content">
+                <span th:text="${actor.first_name + ' ' + actor.last_name}"></span>
+            </div>
+        </li>
+    </ul>
+
+</div>
+<a href="/movies" class="uui-button">Back</a>
+</div>
+</body>
+</html>

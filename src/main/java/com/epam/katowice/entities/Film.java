@@ -12,7 +12,8 @@ public class Film {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long film_id;
+    @Column(name = "film_id")
+    private Long id;
 
     private String title;
 
@@ -43,13 +44,16 @@ public class Film {
             inverseJoinColumns={@JoinColumn(name="actor_id")})
     private Set<Actor> actors;
 
+    @OneToOne(mappedBy = "film")
+    private FilmText filmText;
+
 
     public Film() {
 
     }
 
     public Film(Long film_id, String title, String description, Integer releaseYear, Integer length, Rating rating) {
-        this.film_id = film_id;
+        this.id = film_id;
         this.title = title;
         this.description = description;
         this.releaseYear = releaseYear;
@@ -69,12 +73,12 @@ public class Film {
         this.title = title;
     }
 
-    public Long getFilm_id() {
-        return film_id;
+    public Long getId() {
+        return id;
     }
 
-    public void setFilm_id(Long film_id) {
-        this.film_id = film_id;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getDescription() {
@@ -131,5 +135,13 @@ public class Film {
 
     public void setActors(Set<Actor> actors) {
         this.actors = actors;
+    }
+
+    public FilmText getFilmText() {
+        return filmText;
+    }
+
+    public void setFilmText(FilmText filmText) {
+        this.filmText = filmText;
     }
 }

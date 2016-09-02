@@ -79,14 +79,14 @@ public class MovieRentalControllerTest extends MovieRentalTest {
 
     @Test
     public void testGetFilmsCount() throws Exception {
-        // when
+        // given
         Mockito.when(filmService.getFilmsCount()).thenReturn(1000l);
         ExtendedModelMap model = new ExtendedModelMap();
 
-        // then
+        // when
         String index = movieController.getFilmsCount(model);
 
-        //expected
+        //than
         Assertions.assertThat(index).isEqualTo("index");
         Assertions.assertThat(model.asMap()).isNotEmpty();
         Assertions.assertThat(model.asMap()).containsKey("movieCount");
@@ -96,7 +96,7 @@ public class MovieRentalControllerTest extends MovieRentalTest {
 
     @Test
     public void testGetFilms() throws Exception {
-        //when
+        //given
         Film film1 = new Film(1L, "title1", "description1", 2016, new Integer(100), Rating.NC17);
         Film film2 = new Film(2L, "title2", "description2", 2016, new Integer(200), Rating.NC17);
 
@@ -104,13 +104,14 @@ public class MovieRentalControllerTest extends MovieRentalTest {
         Mockito.when(categoryService.findAll()).thenReturn(Arrays.asList(new Category()));
         Mockito.when(languageService.findAll()).thenReturn(Arrays.asList(new Language()));
 
+        //
         mockMvc.perform(get("/movies"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("films"))
             .andExpect(model().attribute("page", hasProperty("content", hasSize(2))))
             .andExpect(model().attribute("page", hasProperty("content", hasItem(
                 allOf(
-                    hasProperty("film_id", is(1L)),
+                    hasProperty("id", is(1L)),
                     hasProperty("description", is("description1")),
                     hasProperty("title", is("title1")),
                     hasProperty("releaseYear", is(2016)),
@@ -119,12 +120,32 @@ public class MovieRentalControllerTest extends MovieRentalTest {
             ))))
            .andExpect(model().attribute("page", hasProperty("content", hasItem(
                 allOf(
-                    hasProperty("film_id", is(2L)),
+                    hasProperty("id", is(2L)),
                     hasProperty("description", is("description2")),
                     hasProperty("title", is("title2")),
                     hasProperty("releaseYear", is(2016)),
                     hasProperty("length", is(200))
                 )
             ))));
+    }
+
+    @Test
+    public void testGetFilmById() throws Exception {
+        Film film1 = new Film(1L, "title1", "description1", 2016, new Integer(100), Rating.NC17);
+
+        Mockito.when(filmService.findById(Mockito.any(Long.class))).thenReturn(film1);
+        Mockito.when(categoryService.findAll()).thenReturn(Arrays.asList(new Category()));
+        Mockito.when(languageService.findAll()).thenReturn(Arrays.asList(new Language()));
+
+        mockMvc.perform(get("/movie/view/{id}", 1L))
+                .andExpect(status().isOk())
+                .andExpect(view().name("details"))
+                .andExpect(model().attribute("film", allOf(
+                                hasProperty("id", is(1L)),
+                                hasProperty("description", is("description1")),
+                                hasProperty("title", is("title1")),
+                                hasProperty("releaseYear", is(2016)),
+                                hasProperty("length", is(100))
+                        )));
     }
 }

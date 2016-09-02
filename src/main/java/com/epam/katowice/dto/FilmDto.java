@@ -1,9 +1,6 @@
 package com.epam.katowice.dto;
 
-import com.epam.katowice.entities.Actor;
-import com.epam.katowice.entities.Category;
-import com.epam.katowice.entities.Language;
-import com.epam.katowice.entities.Rating;
+import com.epam.katowice.entities.*;
 
 import java.util.Set;
 
@@ -12,7 +9,7 @@ import java.util.Set;
  */
 public class FilmDto {
 
-    private Long film_id;
+    private Long id;
 
     private String title;
 
@@ -30,6 +27,8 @@ public class FilmDto {
 
     private Set<Actor> actors;
 
+    private FilmText filmText;
+
     public Rating getRating() {
         return rating;
     }
@@ -43,19 +42,19 @@ public class FilmDto {
     }
 
     public FilmDto(Long film_id, String title, String description, int releaseYear, Integer length) {
-        this.film_id = film_id;
+        this.id = film_id;
         this.title = title;
         this.description = description;
         this.releaseYear = releaseYear;
         this.length = length;
     }
 
-    public Long getFilm_id() {
-        return film_id;
+    public Long getId() {
+        return id;
     }
 
-    public void setFilm_id(Long film_id) {
-        this.film_id = film_id;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getTitle() {
@@ -112,5 +111,13 @@ public class FilmDto {
 
     public void setActors(Set<Actor> actors) {
         this.actors = actors;
+    }
+
+    public FilmText getFilmText() {
+        return filmText;
+    }
+
+    public void setFilmText(FilmText filmText) {
+        this.filmText = filmText;
     }
 }
