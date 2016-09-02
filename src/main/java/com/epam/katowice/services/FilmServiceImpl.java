@@ -1,19 +1,17 @@
 package com.epam.katowice.services;
 
+import com.epam.katowice.controllers.parameters.Filters;
 import com.epam.katowice.dao.FilmRepository;
 import com.epam.katowice.dto.FilmDto;
 import com.epam.katowice.entities.Film;
+import com.epam.katowice.entities.specifications.FilmSpecBuilder;
 import com.epam.katowice.mappers.FilmMapper;
 import fr.xebia.extras.selma.Selma;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.convert.converter.Converter;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -43,10 +41,11 @@ public class FilmServiceImpl implements FilmService {
     }
 
     @Override
-    public Page<Film> getPageOfFilms(Pageable pageable) {
-        FilmMapper mapper = Selma.builder(FilmMapper.class).build();
-        PageRequest pageRequest =
-                new PageRequest(pageable.getPageNumber(), pageable.getPageSize(), Sort.Direction.DESC, "title");
-        return filmRepository.findAll(pageable);
+    public Page<Film> getByPredicate(Filters filters, Pageable pageable) {
+
+        FilmSpecBuilder filmSpecBuilder = new FilmSpecBuilder();
+
+        return filmRepository.findAll(filmSpecBuilder.toSpecification(filters), pageable);
     }
+
 }

@@ -1,5 +1,6 @@
 package com.epam.katowice.services;
 
+import com.epam.katowice.controllers.parameters.Filters;
 import com.epam.katowice.dto.FilmDto;
 import com.epam.katowice.entities.Film;
 import org.springframework.data.domain.Page;
@@ -13,5 +14,5 @@ import java.util.List;
 public interface FilmService {
     long getFilmsCount();
     List<FilmDto> getAllFilms();
-    Page<Film> getPageOfFilms(Pageable pageable);
+    Page<Film> getByPredicate(Filters filters, Pageable pageable);
 }
