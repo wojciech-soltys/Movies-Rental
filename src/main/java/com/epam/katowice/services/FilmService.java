@@ -15,4 +15,5 @@ public interface FilmService {
     long getFilmsCount();
     List<FilmDto> getAllFilms();
     Page<Film> getByPredicate(Filters filters, Pageable pageable);
+    Film findById(Long id);
 }

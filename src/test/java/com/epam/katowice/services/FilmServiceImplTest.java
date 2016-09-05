@@ -38,25 +38,25 @@ public class FilmServiceImplTest extends MovieRentalTest {
 
     @AfterMethod
     public void tearDown() throws Exception {
-
+        repository.deleteAll();
     }
 
     @Test
     public void testGetFilmsCount() throws Exception {
-        // when
+        // given
         Mockito.when(repository.count()).thenReturn(1000l);
 
-        // then
+        // when
         long movieCount = filmService.getFilmsCount();
 
-        //expected
+        // than
         Assertions.assertThat(movieCount).isEqualTo(1000l);
     }
 
 
     @Test
     public void testGetAllFilms() throws Exception {
-        // when
+        // given
         Film film1 = new Film(1L, "title1", "description1", 2016, new Integer(100), Rating.NC17);
         repository.save(film1);
         Film film2 = new Film(2L, "title2", "description2", 2016, new Integer(200), Rating.NC17);
@@ -64,10 +64,10 @@ public class FilmServiceImplTest extends MovieRentalTest {
 
         Mockito.when(repository.findAll()).thenReturn(Arrays.asList(film1, film2));
 
-        // then
+        // when
         List<FilmDto> films = filmService.getAllFilms();
 
-        //expected
+        // than
         Assertions.assertThat(films.size()).isEqualTo(2);
 
         FilmDto FilmDto1 = films.get(0);
@@ -76,8 +76,8 @@ public class FilmServiceImplTest extends MovieRentalTest {
         EqualsBuilder.reflectionEquals(film1, FilmDto1);
 
         //Id
-        Assertions.assertThat(film1.getFilm_id()).isEqualTo(FilmDto1.getFilm_id());
-        Assertions.assertThat(film2.getFilm_id()).isEqualTo(FilmDto2.getFilm_id());
+        Assertions.assertThat(film1.getId()).isEqualTo(FilmDto1.getId());
+        Assertions.assertThat(film2.getId()).isEqualTo(FilmDto2.getId());
 
         //Title
         Assertions.assertThat(film1.getTitle()).isEqualTo(FilmDto1.getTitle());
@@ -96,30 +96,50 @@ public class FilmServiceImplTest extends MovieRentalTest {
         Assertions.assertThat(film2.getLength()).isEqualTo(FilmDto2.getLength());
     }
 
+
     @Test
-    public void testGetPageOfFilms() throws Exception {
+    public void testGetPageOfFilmsDesc() throws Exception {
+        //given
         Film film1 = new Film(1L, "title1", "description1", 2016, new Integer(100), Rating.NC17);
         repository.save(film1);
         Film film2 = new Film(2L, "title2", "description2", 2016, new Integer(200), Rating.NC17);
         repository.save(film2);
 
         Pageable pageRequest = new PageRequest(0,10, Sort.Direction.DESC, "title");
-        Pageable pageRequest1 = new PageRequest(0,10, Sort.Direction.ASC, "title");
 
-        Mockito.when(repository.findAll(pageRequest)).thenReturn(new PageImpl<>(Arrays.asList(film1,film2)));
-        Mockito.when(repository.findAll(pageRequest1)).thenReturn(new PageImpl<>(Arrays.asList(film2,film1)));
+        Mockito.when(repository.findAll(pageRequest)).thenReturn(new PageImpl<>(Arrays.asList(film1,film2)));;
 
+        // when
         Page<Film> page = repository.findAll(pageRequest);
+
+        //than
         Assertions.assertThat(page.getContent().size()).isEqualTo(2);
         Assertions.assertThat(page.getContent().get(0).getTitle()).isEqualTo("title1");
-
-        page = repository.findAll(pageRequest1);
-        Assertions.assertThat(page.getContent().size()).isEqualTo(2);
-        Assertions.assertThat(page.getContent().get(0).getTitle()).isEqualTo("title2");
     }
 
     @Test
-    public void testFindFilms() throws Exception {
+    public void testGetPageOfFilmsAsc() throws Exception {
+        //given
+        Film film1 = new Film(1L, "title1", "description1", 2016, new Integer(100), Rating.NC17);
+        repository.save(film1);
+        Film film2 = new Film(2L, "title2", "description2", 2016, new Integer(200), Rating.NC17);
+        repository.save(film2);
+
+        Pageable pageRequest1 = new PageRequest(0,10, Sort.Direction.ASC, "title");
+
+        Mockito.when(repository.findAll(pageRequest1)).thenReturn(new PageImpl<>(Arrays.asList(film2,film1)));
+
+        // when
+        Page<Film> page2 = repository.findAll(pageRequest1);
+
+        //than
+        Assertions.assertThat(page2.getContent().size()).isEqualTo(2);
+        Assertions.assertThat(page2.getContent().get(0).getTitle()).isEqualTo("title2");
+    }
+
+    @Test
+    public void testFindFilmsOne() throws Exception {
+        //given
         Film film1 = new Film(1L, "title1", "description1", 2016, new Integer(100), Rating.NC17);
         repository.save(film1);
         Film film2 = new Film(2L, "title2", "description2", 2016, new Integer(200), Rating.NC17);
@@ -133,14 +153,71 @@ public class FilmServiceImplTest extends MovieRentalTest {
         Mockito.when(repository.findAll(Mockito.any(Specification.class),Mockito.eq(pageRequest)))
                 .thenReturn(new PageImpl<>(Arrays.asList(film1)));
 
+        //when
         Page<Film> page = filmService.getByPredicate(filters, pageRequest);
 
+        //than
         Assertions.assertThat(page.getContent().size()).isEqualTo(1);
         Assertions.assertThat(page.getContent().get(0).getTitle()).isEqualTo("title1");
+    }
 
+    @Test
+    public void testFindFilmsTwo() throws Exception {
+        //given
+        Film film1 = new Film(1L, "title1", "description1", 2016, new Integer(100), Rating.NC17);
+        repository.save(film1);
+        Film film2 = new Film(2L, "title2", "description2", 2016, new Integer(200), Rating.NC17);
+        repository.save(film2);
+        Pageable pageRequest = new PageRequest(0,10, Sort.Direction.DESC, "title");
+
+        Filters filters = new Filters();
         filters.setCategory("title2");
-        page = filmService.getByPredicate(filters, pageRequest);
-        Assertions.assertThat(page.getContent().size()).isEqualTo(0);
+
+        Mockito.when(repository.findAll(Mockito.any(Specification.class),Mockito.eq(pageRequest)))
+                .thenReturn(new PageImpl<>(Arrays.asList(film2)));
+
+        //when
+        Page<Film> page = filmService.getByPredicate(filters, pageRequest);
+
+        //than
+        Assertions.assertThat(page.getContent().size()).isEqualTo(1);
+        Assertions.assertThat(page.getContent().get(0).getTitle()).isEqualTo("title2");
+    }
+
+    @Test
+    public void testFindByIdOne() throws Exception {
+        //given
+        Film film1 = new Film(1L, "title1", "description1", 2016, new Integer(100), Rating.NC17);
+        repository.save(film1);
+        Film film2 = new Film(2L, "title2", "description2", 2016, new Integer(200), Rating.NC17);
+        repository.save(film2);
+
+        Mockito.when(repository.findById(Mockito.any(Long.class))).thenReturn(film1);
+
+        //when
+        Film returnFilm = filmService.findById(1L);
+
+        //than
+        Assertions.assertThat(returnFilm.getId()).isEqualTo(film1.getId());
+        Assertions.assertThat(returnFilm.getTitle()).isEqualTo(film1.getTitle());
+    }
+
+    @Test
+    public void testFindByIdTwo() throws Exception {
+        //given
+        Film film1 = new Film(1L, "title1", "description1", 2016, new Integer(100), Rating.NC17);
+        repository.save(film1);
+        Film film2 = new Film(2L, "title2", "description2", 2016, new Integer(200), Rating.NC17);
+        repository.save(film2);
+
+        Mockito.when(repository.findById(Mockito.any(Long.class))).thenReturn(film2);
+
+        //when
+        Film returnFilm = filmService.findById(2L);
+
+        //than
+        Assertions.assertThat(returnFilm.getId()).isEqualTo(film2.getId());
+        Assertions.assertThat(returnFilm.getTitle()).isEqualTo(film2.getTitle());
     }
 
 }

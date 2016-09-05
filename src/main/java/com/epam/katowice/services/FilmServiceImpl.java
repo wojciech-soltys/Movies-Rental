@@ -48,4 +48,9 @@ public class FilmServiceImpl implements FilmService {
         return filmRepository.findAll(filmSpecBuilder.toSpecification(filters), pageable);
     }
 
+    @Override
+    public Film findById(Long id) {
+        return filmRepository.findById(id);
+    }
+
 }
