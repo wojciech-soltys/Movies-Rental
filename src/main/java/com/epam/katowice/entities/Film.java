@@ -47,6 +47,9 @@ public class Film {
     @OneToOne(mappedBy = "film")
     private FilmText filmText;
 
+    @Convert(converter = FeaturesConverter.class)
+    @Column(name = "special_features")
+    private Set<Features> specialFeatures;
 
     public Film() {
 
@@ -143,5 +146,13 @@ public class Film {
 
     public void setFilmText(FilmText filmText) {
         this.filmText = filmText;
+    }
+
+    public Set<Features> getSpecialFeatures() {
+        return specialFeatures;
+    }
+
+    public void setSpecialFeatures(Set<Features> specialFeatures) {
+        this.specialFeatures = specialFeatures;
     }
 }

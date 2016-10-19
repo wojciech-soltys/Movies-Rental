@@ -1,5 +1,6 @@
 package com.epam.katowice.services;
 
+import com.epam.katowice.dao.ActorRepository;
 import com.epam.katowice.entities.Actor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,11 +13,14 @@ import java.util.List;
 @Service
 public class ActorServiceImpl implements ActorService {
 
-    @Autowired
-    ActorService actorService;
+    ActorRepository actorRepository;
+
+    public ActorServiceImpl(@Autowired ActorRepository actorRepository) {
+        this.actorRepository = actorRepository;
+    }
 
     @Override
     public List<Actor> findAll() {
-        return actorService.findAll();
+        return actorRepository.findAll();
     }
 }

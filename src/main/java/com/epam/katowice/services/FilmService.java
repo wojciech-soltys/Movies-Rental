@@ -16,4 +16,5 @@ public interface FilmService {
     List<FilmDto> getAllFilms();
     Page<Film> getByPredicate(Filters filters, Pageable pageable);
     Film findById(Long id);
+    Film save(Film film);
 }

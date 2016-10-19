@@ -2,10 +2,10 @@ package com.epam.katowice.dao;
 
 import com.epam.katowice.common.MovieRentalTest;
 import com.epam.katowice.controllers.parameters.Filters;
+import com.epam.katowice.entities.Category;
 import com.epam.katowice.entities.Film;
 import com.epam.katowice.entities.Rating;
 import com.epam.katowice.entities.specifications.FilmSpecBuilder;
-import org.assertj.core.api.Assertions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -16,12 +16,19 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class FilmRepositoryTest extends MovieRentalTest {
 
     @Autowired
     private FilmRepository repository;
+
+    @Autowired
+    private CategoryRepository categoryRepository;
 
     @BeforeMethod
     public void setUp() throws Exception {
@@ -44,7 +51,7 @@ public class FilmRepositoryTest extends MovieRentalTest {
         long movieCount = repository.count();
 
         //than
-        Assertions.assertThat(movieCount).isEqualTo(2l);
+        assertThat(movieCount).isEqualTo(2l);
     }
 
     @Test
@@ -60,7 +67,7 @@ public class FilmRepositoryTest extends MovieRentalTest {
         List<Film> films = repository.findAll();
 
         //than
-        Assertions.assertThat(films.size()).isEqualTo(2);
+        assertThat(films.size()).isEqualTo(2);
     }
 
     @Test
@@ -78,8 +85,8 @@ public class FilmRepositoryTest extends MovieRentalTest {
         Page<Film> page = repository.findAll(pageRequest);
 
         //than
-        Assertions.assertThat(page.getContent().size()).isEqualTo(2);
-        Assertions.assertThat(page.getContent().get(0).getTitle()).isEqualTo("title2");
+        assertThat(page.getContent().size()).isEqualTo(2);
+        assertThat(page.getContent().get(0).getTitle()).isEqualTo("title2");
     }
 
     @Test
@@ -97,8 +104,8 @@ public class FilmRepositoryTest extends MovieRentalTest {
         Page<Film> page = repository.findAll(pageRequest);
 
         //than
-        Assertions.assertThat(page.getContent().size()).isEqualTo(2);
-        Assertions.assertThat(page.getContent().get(0).getTitle()).isEqualTo("title1");
+        assertThat(page.getContent().size()).isEqualTo(2);
+        assertThat(page.getContent().get(0).getTitle()).isEqualTo("title1");
     }
 
     @Test
@@ -119,8 +126,8 @@ public class FilmRepositoryTest extends MovieRentalTest {
         Page<Film> page = repository.findAll(filmSpecBuilder.toSpecification(filters),pageRequest);
 
         //than
-        Assertions.assertThat(page.getContent().size()).isEqualTo(1);
-        Assertions.assertThat(page.getContent().get(0).getTitle()).isEqualTo("title1");
+        assertThat(page.getContent().size()).isEqualTo(1);
+        assertThat(page.getContent().get(0).getTitle()).isEqualTo("title1");
     }
 
     @Test
@@ -142,7 +149,7 @@ public class FilmRepositoryTest extends MovieRentalTest {
         Page<Film>page = repository.findAll(filmSpecBuilder.toSpecification(filters),pageRequest);
 
         //than
-        Assertions.assertThat(page.getContent().size()).isEqualTo(0);
+        assertThat(page.getContent().size()).isEqualTo(0);
     }
 
 
@@ -151,20 +158,48 @@ public class FilmRepositoryTest extends MovieRentalTest {
     @Transactional
     public void testFindByIdOne() throws Exception {
         //given
-        Film film1 = new Film(1L, "title1", "description1", 2014, new Integer(100), Rating.NC17);
-        repository.save(film1);
-        Film film2 = new Film(2L, "title2", "description2", 2016, new Integer(200), Rating.NC17);
-        repository.save(film2);
+        Film film1 = new Film(null, "title1", "description1", 2014, new Integer(100), Rating.NC17);
+        film1 = repository.save(film1);
+        Film film2 = new Film(null, "title2", "description2", 2016, new Integer(200), Rating.NC17);
+        film2 = repository.save(film2);
 
         //when
-        Film repoFilm1 = repository.findById(1L);
-        Film repoFilm2 = repository.findById(2L);
+        Film repoFilm1 = repository.findById(film1.getId());
+        Film repoFilm2 = repository.findById(film2.getId());
 
         //than
-        Assertions.assertThat(film1.getId()).isEqualTo(repoFilm1.getId());
-        Assertions.assertThat(film1.getTitle()).isEqualTo(repoFilm1.getTitle());
+        assertThat(film1.getId()).isEqualTo(repoFilm1.getId());
+        assertThat(film1.getTitle()).isEqualTo(repoFilm1.getTitle());
 
-        Assertions.assertThat(film2.getId()).isEqualTo(repoFilm2.getId());
-        Assertions.assertThat(film2.getTitle()).isEqualTo(repoFilm2.getTitle());
+        assertThat(film2.getId()).isEqualTo(repoFilm2.getId());
+        assertThat(film2.getTitle()).isEqualTo(repoFilm2.getTitle());
+    }
+
+    @Test
+    @Transactional
+    public void testAddMovie () {
+        //given
+        Film film1 = new Film(1L, "title1", "description1", 2014, new Integer(100), Rating.NC17);
+        Category category = new Category();
+        category.setCategory_id(new Long(1));
+        category.setName("Action");
+        categoryRepository.save(category);
+        Set<Category> categories = new HashSet<>();
+        categories.add(category);
+        film1.setCategories(categories);
+        film1 = repository.save(film1);
+
+        //when
+        Film repoFilm = repository.findById(film1.getId());
+
+        //then
+        assertThat(film1.getId()).isEqualTo(repoFilm.getId());
+        assertThat(film1.getTitle()).isEqualTo(repoFilm.getTitle());
+        assertThat(film1.getDescription()).isEqualTo(repoFilm.getDescription());
+        assertThat(film1.getReleaseYear()).isEqualTo(repoFilm.getReleaseYear());
+        assertThat(film1.getLength()).isEqualTo(repoFilm.getLength());
+        assertThat(film1.getRating()).isEqualTo(repoFilm.getRating());
+        assertThat(film1.getCategories().size()).isEqualTo(1);
+        assertThat(film1.getCategories().iterator().next().getName()).isEqualTo("Action");
     }
 }

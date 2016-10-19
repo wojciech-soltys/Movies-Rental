@@ -4,7 +4,6 @@ package com.epam.katowice.entities;
  * Created by Wojciech_Soltys on 11.08.2016.
  */
 public enum Rating {
-    UNRATED("UNRATED"),
     G("G"),
     PG("PG"),
     PG13("PG-13"),

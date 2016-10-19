@@ -21,7 +21,6 @@ import java.util.stream.Collectors;
 @Service
 public class FilmServiceImpl implements FilmService {
 
-    private static final int PAGE_SIZE = 50;
     private final FilmRepository filmRepository;
 
     @Autowired
@@ -42,15 +41,18 @@ public class FilmServiceImpl implements FilmService {
 
     @Override
     public Page<Film> getByPredicate(Filters filters, Pageable pageable) {
-
         FilmSpecBuilder filmSpecBuilder = new FilmSpecBuilder();
-
         return filmRepository.findAll(filmSpecBuilder.toSpecification(filters), pageable);
     }
 
     @Override
     public Film findById(Long id) {
         return filmRepository.findById(id);
+    }
+
+    @Override
+    public Film save(Film film) {
+        return filmRepository.save(film);
     }
 
 }

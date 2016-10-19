@@ -29,6 +29,8 @@ public class FilmDto {
 
     private FilmText filmText;
 
+    private Set<Features> specialFeatures;
+
     public Rating getRating() {
         return rating;
     }
@@ -119,5 +121,13 @@ public class FilmDto {
 
     public void setFilmText(FilmText filmText) {
         this.filmText = filmText;
+    }
+
+    public Set<Features> getSpecialFeatures() {
+        return specialFeatures;
+    }
+
+    public void setSpecialFeatures(Set<Features> specialFeatures) {
+        this.specialFeatures = specialFeatures;
     }
 }
