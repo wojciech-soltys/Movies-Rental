@@ -9,5 +9,5 @@ import java.util.List;
  */
 public interface ActorService {
 
-    public List<Actor> findAll();
+    List<Actor> findAll();
 }

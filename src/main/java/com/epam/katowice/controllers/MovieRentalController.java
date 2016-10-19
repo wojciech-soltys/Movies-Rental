@@ -2,6 +2,7 @@ package com.epam.katowice.controllers;
 
 import com.epam.katowice.controllers.parameters.Filters;
 import com.epam.katowice.entities.Film;
+import com.epam.katowice.services.ActorService;
 import com.epam.katowice.services.CategoryService;
 import com.epam.katowice.services.FilmService;
 import com.epam.katowice.services.LanguageService;
@@ -32,6 +33,9 @@ public class MovieRentalController {
     @Autowired
     private LanguageService languageService;
 
+    @Autowired
+    private ActorService actorService;
+
     @RequestMapping("/")
     public String getFilmsCount(Model model) {
         model.addAttribute("movieCount", filmService.getFilmsCount());
@@ -40,7 +44,7 @@ public class MovieRentalController {
 
     @RequestMapping(value = "/movies")
     public String getFilms(Model model, Pageable pageable, Filters filters, @RequestParam Map<String,String> allRequestParams) {
-        PageWrapper<Film> page = new PageWrapper<Film>(filmService.getByPredicate(filters, pageable), "/movies" + generateSearchLink(allRequestParams));
+        PageWrapper<Film> page = new PageWrapper<>(filmService.getByPredicate(filters, pageable), "/movies" + generateSearchLink(allRequestParams));
 
         model.addAttribute("page", page);
         if(page.getPage().getSort() != null) {
@@ -58,6 +62,26 @@ public class MovieRentalController {
         Film film = filmService.findById(id);
         model.addAttribute("film", film);
         return "details";
+    }
+
+    @RequestMapping("/viewAddMovie")
+    public String view(Model model) {
+        Film movieOutput = new Film();
+        model.addAttribute("movie", movieOutput);
+        model.addAttribute("categories", categoryService.findAll());
+        model.addAttribute("languages", languageService.findAll());
+        model.addAttribute("actors", actorService.findAll());
+        return "addMovie";
+    }
+
+    @RequestMapping("/addMovie")
+    public String addMovie(Model model, Film film) {
+        Film filmOutput = filmService.save(film);
+        model.addAttribute("movie", filmOutput);
+        model.addAttribute("categories", categoryService.findAll());
+        model.addAttribute("languages", languageService.findAll());
+        model.addAttribute("actors", actorService.findAll());
+        return "redirect:viewAddMovie";
     }
 
     private String generateSearchLink(Map<String,String> allRequestParams) {

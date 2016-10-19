@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html layout:decorator="fragments/layout">
+<head>
+    <title>Movies</title>
+</head>
+<body>
+
+<div layout:fragment="content">
+    <form th:action="@{/addMovie}" th:object="${movie}">
+        <table style="width:100%">
+           <tr>
+               <th style="width:100px"><span class="uui-label">Title:</span></th>
+               <th><input type="text" class="uui-form-element" th:field="*{title}" /></th>
+           </tr>
+            <tr>
+                <th><span class="uui-label" style="float:left">Short Description:</span></th>
+                <th><textarea class="uui-form-element" th:field="*{description}"  rows="3" cols="20" /></th>
+            </tr>
+            <tr>
+                <th><span class="uui-label" style="float:left">Release Year:</span></th>
+                <th><input type="text" class="uui-form-element" th:field="*{releaseYear}"/></th>
+            </tr>
+            <tr>
+                <th><span class="uui-label" style="float:left">Length:</span></th>
+                <th><input type="text" class="uui-form-element" th:field="*{length}"/></th>
+            </tr>
+            <tr>
+                <th><span class="uui-label" style="float:left">Rating:</span></th>
+                <th>
+                    <select th:field="*{rating}">
+                        <option th:each="rate : ${T(com.epam.katowice.entities.Rating).values()}"
+                                th:value="${rate}"
+                                th:text="${rate}">
+                        </option>
+                    </select>
+                </th>
+            </tr>
+            <tr>
+                <th><span class="uui-label" style="float:left">Language:</span></th>
+                <th>
+                    <select th:field="*{language.language_id}">
+                        <option th:each="language : ${languages}" th:value="${language.language_id}" th:text="${language.name}"/>
+                    </select>
+                </th>
+            </tr>
+            <tr>
+                <th><span class="uui-label" style="float:left">Category:</span></th>
+                <th>
+                    <select th:field="*{categories}" multiple="multiple">
+                        <option th:each="category : ${categories}" th:value="${category.category_id}" th:text="${category.name}"/>
+                    </select>
+                </th>
+            </tr>
+            <tr>
+                <th><span class="uui-label" style="float:left">Special features:</span></th>
+                <th>
+                    <select th:field="*{specialFeatures}" multiple="multiple">
+                        <option th:each="feature : ${T(com.epam.katowice.entities.Features).values()}"
+                                th:value="${feature}"
+                                th:text="${feature.name}">
+                        </option>
+                    </select>
+                </th>
+            </tr>
+            <tr>
+                <th><span class="uui-label" style="float:left">Actors:</span></th>
+                <th>
+                    <select th:field="*{actors}" multiple="multiple">
+                        <option th:each="actor : ${actors}" th:value="${actor.actor_id}" th:text="${actor.first_name + ' ' + actor.last_name}"/>
+                    </select>
+                </th>
+            </tr>
+        </table>
+        <button class="uui-button" type="submit">Add</button>
+    </form>
+</div>
+</body>
+</html>

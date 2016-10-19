@@ -2,10 +2,8 @@ package com.epam.katowice.controllers;
 
 import com.epam.katowice.common.MovieRentalTest;
 import com.epam.katowice.controllers.parameters.Filters;
-import com.epam.katowice.entities.Category;
-import com.epam.katowice.entities.Film;
-import com.epam.katowice.entities.Language;
-import com.epam.katowice.entities.Rating;
+import com.epam.katowice.entities.*;
+import com.epam.katowice.services.ActorService;
 import com.epam.katowice.services.CategoryService;
 import com.epam.katowice.services.FilmService;
 import com.epam.katowice.services.LanguageService;
@@ -33,6 +31,7 @@ import java.util.Arrays;
 import java.util.Locale;
 
 import static org.hamcrest.Matchers.*;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -54,6 +53,9 @@ public class MovieRentalControllerTest extends MovieRentalTest {
 
     @Mock
     private LanguageService languageService;
+
+    @Mock
+    private ActorService actorService;
 
     @InjectMocks
     private MovieRentalController movieController;
@@ -80,7 +82,7 @@ public class MovieRentalControllerTest extends MovieRentalTest {
     @Test
     public void testGetFilmsCount() throws Exception {
         // given
-        Mockito.when(filmService.getFilmsCount()).thenReturn(1000l);
+        when(filmService.getFilmsCount()).thenReturn(1000l);
         ExtendedModelMap model = new ExtendedModelMap();
 
         // when
@@ -100,11 +102,11 @@ public class MovieRentalControllerTest extends MovieRentalTest {
         Film film1 = new Film(1L, "title1", "description1", 2016, new Integer(100), Rating.NC17);
         Film film2 = new Film(2L, "title2", "description2", 2016, new Integer(200), Rating.NC17);
 
-        Mockito.when(filmService.getByPredicate(Mockito.any(Filters.class), Mockito.any(Pageable.class))).thenReturn(new PageImpl<Film>(Arrays.asList(film1,film2)));
-        Mockito.when(categoryService.findAll()).thenReturn(Arrays.asList(new Category()));
-        Mockito.when(languageService.findAll()).thenReturn(Arrays.asList(new Language()));
+        when(filmService.getByPredicate(Mockito.any(Filters.class), Mockito.any(Pageable.class))).thenReturn(new PageImpl<Film>(Arrays.asList(film1,film2)));
+        when(categoryService.findAll()).thenReturn(Arrays.asList(new Category()));
+        when(languageService.findAll()).thenReturn(Arrays.asList(new Language()));
 
-        //
+        //when
         mockMvc.perform(get("/movies"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("films"))
@@ -133,9 +135,9 @@ public class MovieRentalControllerTest extends MovieRentalTest {
     public void testGetFilmById() throws Exception {
         Film film1 = new Film(1L, "title1", "description1", 2016, new Integer(100), Rating.NC17);
 
-        Mockito.when(filmService.findById(Mockito.any(Long.class))).thenReturn(film1);
-        Mockito.when(categoryService.findAll()).thenReturn(Arrays.asList(new Category()));
-        Mockito.when(languageService.findAll()).thenReturn(Arrays.asList(new Language()));
+        when(filmService.findById(Mockito.any(Long.class))).thenReturn(film1);
+        when(categoryService.findAll()).thenReturn(Arrays.asList(new Category()));
+        when(languageService.findAll()).thenReturn(Arrays.asList(new Language()));
 
         mockMvc.perform(get("/movie/view/{id}", 1L))
                 .andExpect(status().isOk())
@@ -147,5 +149,26 @@ public class MovieRentalControllerTest extends MovieRentalTest {
                                 hasProperty("releaseYear", is(2016)),
                                 hasProperty("length", is(100))
                         )));
+    }
+
+    @Test
+    public void testAddMovie() throws Exception {
+        Film film1 = new Film(1L, "title1", "description1", 2016, new Integer(100), Rating.NC17);
+
+        when(filmService.save(Mockito.any(Film.class))).thenReturn(film1);
+        when(categoryService.findAll()).thenReturn(Arrays.asList(new Category()));
+        when(languageService.findAll()).thenReturn(Arrays.asList(new Language()));
+        when(actorService.findAll()).thenReturn(Arrays.asList(new Actor()));
+
+        mockMvc.perform(get("/addMovie")
+                .param("title", "TEST123"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("redirect:viewAddMovie"))
+                .andExpect(model().attribute("movie", allOf(
+                        hasProperty("description", is("description1")),
+                        hasProperty("title", is("title1")),
+                        hasProperty("releaseYear", is(2016)),
+                        hasProperty("length", is(100))
+                )));
     }
 }
