@@ -11,6 +11,8 @@
            <tr>
                <th style="width:100px"><span class="uui-label">Title:</span></th>
                <th><input type="text" class="uui-form-element" th:field="*{title}" /></th>
+               <th th:if="${#fields.hasErrors('title')}" th:errors="*{title}">Title Error</th>
+
            </tr>
             <tr>
                 <th><span class="uui-label" style="float:left">Short Description:</span></th>

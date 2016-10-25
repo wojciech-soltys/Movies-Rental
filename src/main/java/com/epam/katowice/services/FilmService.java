@@ -14,7 +14,7 @@ import java.util.List;
 public interface FilmService {
     long getFilmsCount();
     List<FilmDto> getAllFilms();
-    Page<Film> getByPredicate(Filters filters, Pageable pageable);
+    Page<FilmDto> getByPredicate(Filters filters, Pageable pageable);
     Film findById(Long id);
-    Film save(Film film);
+    FilmDto save(FilmDto film);
 }

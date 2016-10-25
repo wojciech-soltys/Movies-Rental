@@ -156,7 +156,7 @@ public class FilmServiceImplTest extends MovieRentalTest {
                 .thenReturn(new PageImpl<>(Arrays.asList(film1)));
 
         //when
-        Page<Film> page = filmService.getByPredicate(filters, pageRequest);
+        Page<FilmDto> page = filmService.getByPredicate(filters, pageRequest);
 
         //than
         assertThat(page.getContent().size()).isEqualTo(1);
@@ -179,7 +179,7 @@ public class FilmServiceImplTest extends MovieRentalTest {
                 .thenReturn(new PageImpl<>(Arrays.asList(film2)));
 
         //when
-        Page<Film> page = filmService.getByPredicate(filters, pageRequest);
+        Page<FilmDto> page = filmService.getByPredicate(filters, pageRequest);
 
         //than
         assertThat(page.getContent().size()).isEqualTo(1);
@@ -226,16 +226,17 @@ public class FilmServiceImplTest extends MovieRentalTest {
     public void testSaveFilm() throws Exception {
         //given
         Film film1 = new Film(1L, "title1", "description1", 2016, new Integer(100), Rating.NC17);
+        FilmDto filmDto1 = new FilmDto(1L, "title1", "description1", 2016, new Integer(100), Rating.NC17);
 
         when(repository.save(Mockito.any(Film.class))).thenReturn(film1);
 
         //when
-        Film film2 = filmService.save(film1);
+        FilmDto film2 = filmService.save(filmDto1);
 
         //then
-        assertThat(film2.getId()).isEqualTo(film1.getId());
-        assertThat(film2.getTitle()).isEqualTo(film1.getTitle());
-        assertThat(film2.getRating()).isEqualTo(film1.getRating());
+        assertThat(film2.getId()).isEqualTo(filmDto1.getId());
+        assertThat(film2.getTitle()).isEqualTo(filmDto1.getTitle());
+        assertThat(film2.getRating()).isEqualTo(filmDto1.getRating());
     }
 
 }
