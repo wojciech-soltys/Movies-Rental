@@ -1,4 +1,6 @@
-package com.epam.katowice.entities;
+package com.epam.katowice.entities.converters;
+
+import com.epam.katowice.entities.Rating;
 
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;

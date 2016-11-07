@@ -9,6 +9,7 @@ import com.epam.katowice.mappers.FilmMapper;
 import fr.xebia.extras.selma.Selma;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +23,7 @@ import java.util.stream.Collectors;
 public class FilmServiceImpl implements FilmService {
 
     private final FilmRepository filmRepository;
+    private final FilmMapper mapper = Selma.builder(FilmMapper.class).build();
 
     @Autowired
     public FilmServiceImpl(FilmRepository filmRepository) {
@@ -35,14 +37,15 @@ public class FilmServiceImpl implements FilmService {
 
     @Override
     public List<FilmDto> getAllFilms() {
-        FilmMapper mapper = Selma.builder(FilmMapper.class).build();
         return filmRepository.findAll().stream().map(mapper::asFilmDto).collect(Collectors.toList());
     }
 
     @Override
-    public Page<Film> getByPredicate(Filters filters, Pageable pageable) {
+    public Page<FilmDto> getByPredicate(Filters filters, Pageable pageable) {
         FilmSpecBuilder filmSpecBuilder = new FilmSpecBuilder();
-        return filmRepository.findAll(filmSpecBuilder.toSpecification(filters), pageable);
+        Page<Film> entityPage = filmRepository.findAll(filmSpecBuilder.toSpecification(filters), pageable);
+        List<FilmDto> films = entityPage.getContent().stream().map(mapper::asFilmDto).collect(Collectors.toList());
+        return new PageImpl<>(films, pageable, entityPage.getTotalElements());
     }
 
     @Override
@@ -51,8 +54,8 @@ public class FilmServiceImpl implements FilmService {
     }
 
     @Override
-    public Film save(Film film) {
-        return filmRepository.save(film);
+    public FilmDto save(FilmDto film) {
+        return mapper.asFilmDto(filmRepository.save(mapper.asFilm(film,new Film())));
     }
 
 }

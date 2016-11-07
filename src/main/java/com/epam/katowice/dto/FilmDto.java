@@ -2,6 +2,8 @@ package com.epam.katowice.dto;
 
 import com.epam.katowice.entities.*;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.Set;
 
 /**
@@ -11,6 +13,8 @@ public class FilmDto {
 
     private Long id;
 
+    @NotNull
+    @Size(min=2, max=30)
     private String title;
 
     private String description;
@@ -27,7 +31,7 @@ public class FilmDto {
 
     private Set<Actor> actors;
 
-    private FilmText filmText;
+    private FilmTextDto filmText;
 
     private Set<Features> specialFeatures;
 
@@ -43,12 +47,13 @@ public class FilmDto {
 
     }
 
-    public FilmDto(Long film_id, String title, String description, int releaseYear, Integer length) {
+    public FilmDto(Long film_id, String title, String description, Integer releaseYear, Integer length, Rating rating) {
         this.id = film_id;
         this.title = title;
         this.description = description;
         this.releaseYear = releaseYear;
         this.length = length;
+        this.rating = rating;
     }
 
     public Long getId() {
@@ -115,11 +120,11 @@ public class FilmDto {
         this.actors = actors;
     }
 
-    public FilmText getFilmText() {
+    public FilmTextDto getFilmText() {
         return filmText;
     }
 
-    public void setFilmText(FilmText filmText) {
+    public void setFilmText(FilmTextDto filmText) {
         this.filmText = filmText;
     }
 

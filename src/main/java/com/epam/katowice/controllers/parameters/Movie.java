@@ -3,7 +3,7 @@ package com.epam.katowice.controllers.parameters;
 import com.epam.katowice.entities.Category;
 import com.epam.katowice.entities.Language;
 import com.epam.katowice.entities.Rating;
-import com.epam.katowice.entities.RatingConverter;
+import com.epam.katowice.entities.converters.RatingConverter;
 
 import javax.persistence.Convert;
 import java.util.ArrayList;

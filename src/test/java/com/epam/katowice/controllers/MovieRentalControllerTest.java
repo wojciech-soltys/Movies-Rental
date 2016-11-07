@@ -2,6 +2,7 @@ package com.epam.katowice.controllers;
 
 import com.epam.katowice.common.MovieRentalTest;
 import com.epam.katowice.controllers.parameters.Filters;
+import com.epam.katowice.dto.FilmDto;
 import com.epam.katowice.entities.*;
 import com.epam.katowice.services.ActorService;
 import com.epam.katowice.services.CategoryService;
@@ -99,14 +100,16 @@ public class MovieRentalControllerTest extends MovieRentalTest {
     @Test
     public void testGetFilms() throws Exception {
         //given
-        Film film1 = new Film(1L, "title1", "description1", 2016, new Integer(100), Rating.NC17);
-        Film film2 = new Film(2L, "title2", "description2", 2016, new Integer(200), Rating.NC17);
+        FilmDto film1 = new FilmDto(1L, "title1", "description1", 2016, new Integer(100), Rating.NC17);
+        FilmDto film2 = new FilmDto(2L, "title2", "description2", 2016, new Integer(200), Rating.NC17);
 
-        when(filmService.getByPredicate(Mockito.any(Filters.class), Mockito.any(Pageable.class))).thenReturn(new PageImpl<Film>(Arrays.asList(film1,film2)));
+        //when
+        when(filmService.getByPredicate(Mockito.any(Filters.class), Mockito.any(Pageable.class))).
+                thenReturn(new PageImpl<FilmDto>(Arrays.asList(film1,film2)));
         when(categoryService.findAll()).thenReturn(Arrays.asList(new Category()));
         when(languageService.findAll()).thenReturn(Arrays.asList(new Language()));
 
-        //when
+        //then
         mockMvc.perform(get("/movies"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("films"))
@@ -153,9 +156,9 @@ public class MovieRentalControllerTest extends MovieRentalTest {
 
     @Test
     public void testAddMovie() throws Exception {
-        Film film1 = new Film(1L, "title1", "description1", 2016, new Integer(100), Rating.NC17);
+        FilmDto film1 = new FilmDto(1L, "title1", "description1", 2016, new Integer(100), Rating.NC17);
 
-        when(filmService.save(Mockito.any(Film.class))).thenReturn(film1);
+        when(filmService.save(Mockito.any(FilmDto.class))).thenReturn(film1);
         when(categoryService.findAll()).thenReturn(Arrays.asList(new Category()));
         when(languageService.findAll()).thenReturn(Arrays.asList(new Language()));
         when(actorService.findAll()).thenReturn(Arrays.asList(new Actor()));
