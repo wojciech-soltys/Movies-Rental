@@ -2,7 +2,7 @@ package com.epam.katowice.services;
 
 import com.epam.katowice.controllers.parameters.Filters;
 import com.epam.katowice.dao.FilmRepository;
-import com.epam.katowice.dto.FilmDto;
+import com.epam.katowice.dto.FilmForm;
 import com.epam.katowice.entities.Film;
 import com.epam.katowice.entities.specifications.FilmSpecBuilder;
 import com.epam.katowice.mappers.FilmMapper;
@@ -36,15 +36,15 @@ public class FilmServiceImpl implements FilmService {
     }
 
     @Override
-    public List<FilmDto> getAllFilms() {
+    public List<FilmForm> getAllFilms() {
         return filmRepository.findAll().stream().map(mapper::asFilmDto).collect(Collectors.toList());
     }
 
     @Override
-    public Page<FilmDto> getByPredicate(Filters filters, Pageable pageable) {
+    public Page<FilmForm> getByPredicate(Filters filters, Pageable pageable) {
         FilmSpecBuilder filmSpecBuilder = new FilmSpecBuilder();
         Page<Film> entityPage = filmRepository.findAll(filmSpecBuilder.toSpecification(filters), pageable);
-        List<FilmDto> films = entityPage.getContent().stream().map(mapper::asFilmDto).collect(Collectors.toList());
+        List<FilmForm> films = entityPage.getContent().stream().map(mapper::asFilmDto).collect(Collectors.toList());
         return new PageImpl<>(films, pageable, entityPage.getTotalElements());
     }
 
@@ -54,7 +54,7 @@ public class FilmServiceImpl implements FilmService {
     }
 
     @Override
-    public FilmDto save(FilmDto film) {
+    public FilmForm save(FilmForm film) {
         return mapper.asFilmDto(filmRepository.save(mapper.asFilm(film,new Film())));
     }
 

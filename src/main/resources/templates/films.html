@@ -64,7 +64,7 @@
         </thead>
         <tbody>
         <tr th:each="film : ${page.content}">
-            <td><a th:text="${film.title}" th:href="@{/movie/view/{id}/(id=${film.id})}"></a></td>
+            <td><a th:text="${film.title}" th:href="@{/details(id=${film.id})}"></a></td>
             <td th:text="${film.description}" />
             <td th:text="${film.releaseYear}" />
             <td th:text="${film.length}" />
