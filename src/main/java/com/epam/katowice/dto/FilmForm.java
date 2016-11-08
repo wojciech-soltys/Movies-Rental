@@ -1,39 +1,48 @@
 package com.epam.katowice.dto;
 
 import com.epam.katowice.entities.*;
+import org.hibernate.validator.constraints.NotEmpty;
 
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.Calendar;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
  * Created by Wojciech_Soltys on 10.08.2016.
  */
-public class FilmDto {
+public class FilmForm {
 
     private Long id;
 
-    @NotNull
-    @Size(min=2, max=30)
+    @NotEmpty
+    @Size(max = 255)
     private String title;
 
+    @Size(max = 65535)
     private String description;
 
+    @Min(value = 1895)
     private int releaseYear;
 
+    @NotNull
     private Integer length;
 
+    @NotNull
     private Rating rating;
 
-    private Set<Category> categories;
-
+    @NotNull
     private Language language;
-
-    private Set<Actor> actors;
 
     private FilmTextDto filmText;
 
-    private Set<Features> specialFeatures;
+    private Set<Features> specialFeatures = new HashSet<>();
+
+    private Set<Actor> actors = new HashSet<>();
+
+    private Set<Category> categories = new HashSet<>();
 
     public Rating getRating() {
         return rating;
@@ -43,11 +52,11 @@ public class FilmDto {
         this.rating = rating;
     }
 
-    public FilmDto() {
-
+    public FilmForm() {
+        this.releaseYear = Calendar.getInstance().get(Calendar.YEAR);
     }
 
-    public FilmDto(Long film_id, String title, String description, Integer releaseYear, Integer length, Rating rating) {
+    public FilmForm(Long film_id, String title, String description, Integer releaseYear, Integer length, Rating rating) {
         this.id = film_id;
         this.title = title;
         this.description = description;

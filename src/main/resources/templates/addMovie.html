@@ -6,25 +6,28 @@
 <body>
 
 <div layout:fragment="content">
-    <form th:action="@{/addMovie}" th:object="${movie}">
+    <form th:action="@{/addMovie}" th:object="${filmForm}" method="post">
         <table style="width:100%">
            <tr>
                <th style="width:100px"><span class="uui-label">Title:</span></th>
-               <th><input type="text" class="uui-form-element" th:field="*{title}" /></th>
-               <th th:if="${#fields.hasErrors('title')}" th:errors="*{title}">Title Error</th>
+               <th style="width:220px"><input type="text" class="uui-form-element" th:field="*{title}" /></th>
+               <th th:errors="*{title}">Title Error</th>
 
            </tr>
             <tr>
                 <th><span class="uui-label" style="float:left">Short Description:</span></th>
-                <th><textarea class="uui-form-element" th:field="*{description}"  rows="3" cols="20" /></th>
+                <th style="width:360px"><textarea class="uui-form-element" th:field="*{description}"  rows="3" cols="20" /></th>
+                <th th:errors="*{description}">Description Error</th>
             </tr>
             <tr>
                 <th><span class="uui-label" style="float:left">Release Year:</span></th>
                 <th><input type="text" class="uui-form-element" th:field="*{releaseYear}"/></th>
+                <th th:errors="*{releaseYear}">Release Year Error</th>
             </tr>
             <tr>
                 <th><span class="uui-label" style="float:left">Length:</span></th>
-                <th><input type="text" class="uui-form-element" th:field="*{length}"/></th>
+                <th style="width:220px"><input type="text" class="uui-form-element" th:field="*{length}"/></th>
+                <th th:errors="*{length}">Length Error</th>
             </tr>
             <tr>
                 <th><span class="uui-label" style="float:left">Rating:</span></th>
@@ -36,6 +39,7 @@
                         </option>
                     </select>
                 </th>
+                <th th:errors="*{rating}">Rating Error</th>
             </tr>
             <tr>
                 <th><span class="uui-label" style="float:left">Language:</span></th>
@@ -44,6 +48,7 @@
                         <option th:each="language : ${languages}" th:value="${language.language_id}" th:text="${language.name}"/>
                     </select>
                 </th>
+                <th th:errors="*{language}">Rating Error</th>
             </tr>
             <tr>
                 <th><span class="uui-label" style="float:left">Category:</span></th>

@@ -1,7 +1,7 @@
 package com.epam.katowice.controllers;
 
 import com.epam.katowice.controllers.parameters.Filters;
-import com.epam.katowice.dto.FilmDto;
+import com.epam.katowice.dto.FilmForm;
 import com.epam.katowice.entities.Film;
 import com.epam.katowice.services.ActorService;
 import com.epam.katowice.services.CategoryService;
@@ -12,14 +12,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import wrappers.PageWrapper;
 
-import javax.validation.Valid;
 import java.util.Map;
 
 /**
@@ -27,7 +26,102 @@ import java.util.Map;
  */
 
 @Controller
-public class MovieRentalController extends WebMvcConfigurerAdapter {
+public class MovieRentalController {
+
+    static final String INDEX_ENDPOINT = "/";
+    static final String NEW_MOVIE_ENDPOINT = "/addMovie";
+    static final String DETAILS_ENDPOINT = "/details";
+    static final String MOVIES_LIST_ENDPOINT = "/movies";
+
+    static final String REDIRECT_PREFIX = "redirect:";
+    static final String INDEX_VIEW = "index";
+    static final String NEW_MOVIE_VIEW = "addMovie";
+    static final String DETAILS_VIEW = "details";
+    static final String MOVIES_LIST_VIEW = "films";
+
+    static final String MOVIE_COUNT_PARAMETER = "movieCount";
+    static final String PAGE_PARAMETER = "page";
+    static final String PAGE_SIZE_PARAMETER = "size";
+    static final String PAGE_SORT_PARAMETER = "sort";
+    static final String ID_PARAMETER = "id";
+    static final String FILM_PARAMETER = "film";
+    static final String CATEGORIES_PARAMETER = "categories";
+    static final String LANGUAGES_PARAMETER = "languages";
+    static final String ACTORS_PARAMETER = "actors";
+
+
+    @RequestMapping(INDEX_ENDPOINT)
+    public String getFilmsCount(Model model) {
+        model.addAttribute(MOVIE_COUNT_PARAMETER, filmService.getFilmsCount());
+        return INDEX_VIEW;
+    }
+
+    @RequestMapping(MOVIES_LIST_ENDPOINT)
+    public String getFilms(Model model, Pageable pageable, Filters filters, @RequestParam Map<String,String> allRequestParams) {
+        PageWrapper<FilmForm> page = new PageWrapper<>(filmService.getByPredicate(filters, pageable),
+                MOVIES_LIST_ENDPOINT + generateSearchLink(allRequestParams));
+
+        model.addAttribute(PAGE_PARAMETER, page);
+        addSortParameter(model, page);
+        prepareDictionaries(model);
+        return MOVIES_LIST_VIEW;
+    }
+
+    @RequestMapping(DETAILS_ENDPOINT)
+    public String view(@RequestParam Long id, Model model) {
+        Film film = filmService.findById(id);
+        model.addAttribute(FILM_PARAMETER, film);
+        return DETAILS_VIEW;
+    }
+
+    @RequestMapping(NEW_MOVIE_ENDPOINT)
+    public String view(Model model, FilmForm filmForm) {
+        prepareDictionaries(model);
+        return NEW_MOVIE_VIEW;
+    }
+
+
+    @RequestMapping(value = NEW_MOVIE_ENDPOINT, method = RequestMethod.POST)
+    public String addMovie(Model model, @Validated FilmForm filmForm, BindingResult bindingResult,
+                           RedirectAttributes redirectAttributes) {
+        if(bindingResult.hasErrors()) {
+            prepareDictionaries(model);
+            return NEW_MOVIE_VIEW;
+        }
+
+        FilmForm filmOutput = filmService.save(filmForm);
+        prepareDictionaries(model);
+        redirectAttributes.addAttribute(ID_PARAMETER, filmOutput.getId());
+        return REDIRECT_PREFIX + DETAILS_VIEW;
+    }
+
+    private void prepareDictionaries(Model model) {
+        model.addAttribute(CATEGORIES_PARAMETER, categoryService.findAll());
+        model.addAttribute(LANGUAGES_PARAMETER, languageService.findAll());
+        model.addAttribute(ACTORS_PARAMETER, actorService.findAll());
+    }
+
+    private String generateSearchLink(Map<String,String> allRequestParams) {
+        String link = "?";
+            for (Map.Entry<String, String> entry : allRequestParams.entrySet())
+            {
+                if(!entry.getKey().equals(PAGE_PARAMETER) && !entry.getKey().equals(PAGE_SIZE_PARAMETER)
+                        && !entry.getKey().equals(PAGE_SORT_PARAMETER)) {
+                    link += entry.getKey() + "=" + entry.getValue();
+                    link += "&";
+                }
+            }
+
+        return link;
+    }
+
+    private void addSortParameter(Model model, PageWrapper<FilmForm> page) {
+        if(page.getPage().getSort() != null) {
+            model.addAttribute(PAGE_SORT_PARAMETER, page.getPage().getSort().toString().replaceAll(": ", ","));
+        } else {
+            model.addAttribute(PAGE_SORT_PARAMETER, "");
+        }
+    }
 
     @Autowired
     private FilmService filmService;
@@ -40,78 +134,4 @@ public class MovieRentalController extends WebMvcConfigurerAdapter {
 
     @Autowired
     private ActorService actorService;
-
-    @Override
-    public void addViewControllers(ViewControllerRegistry registry) {
-        registry.addViewController("/results").setViewName("results");
-    }
-
-    @RequestMapping("/")
-    public String getFilmsCount(Model model) {
-        model.addAttribute("movieCount", filmService.getFilmsCount());
-        return "index";
-    }
-
-    @RequestMapping(value = "/movies")
-    public String getFilms(Model model, Pageable pageable, Filters filters, @RequestParam Map<String,String> allRequestParams) {
-        PageWrapper<FilmDto> page = new PageWrapper<>(filmService.getByPredicate(filters, pageable),
-                "/movies" + generateSearchLink(allRequestParams));
-
-        model.addAttribute("page", page);
-        if(page.getPage().getSort() != null) {
-            model.addAttribute("sort", page.getPage().getSort().toString().replaceAll(": ", ","));
-        } else {
-            model.addAttribute("sort", "");
-        }
-        model.addAttribute("categories", categoryService.findAll());
-        model.addAttribute("languages", languageService.findAll());
-        return "films";
-    }
-
-    @RequestMapping("/movie/view/{id}")
-    public String view(@PathVariable("id") Long id, Model model) {
-        Film film = filmService.findById(id);
-        model.addAttribute("film", film);
-        return "details";
-    }
-
-    @RequestMapping("/viewAddMovie")
-    public String view(Model model) {
-        model.addAttribute("movie", new Film());
-        prepareDictionaries(model);
-        return "addMovie";
-    }
-
-    private void prepareDictionaries(Model model) {
-        model.addAttribute("categories", categoryService.findAll());
-        model.addAttribute("languages", languageService.findAll());
-        model.addAttribute("actors", actorService.findAll());
-    }
-
-    @RequestMapping("/addMovie")
-    public String addMovie(Model model, @Valid FilmDto film, BindingResult bindingResult) {
-        if(bindingResult.hasErrors()) {
-            model.addAttribute("movie", film);
-            prepareDictionaries(model);
-            return "addMovie";
-        }
-
-        FilmDto filmOutput = filmService.save(film);
-        model.addAttribute("movie", filmOutput);
-        prepareDictionaries(model);
-        return "redirect:viewAddMovie";
-    }
-
-    private String generateSearchLink(Map<String,String> allRequestParams) {
-        String link = "?";
-            for (Map.Entry<String, String> entry : allRequestParams.entrySet())
-            {
-                if(!entry.getKey().equals("page") && !entry.getKey().equals("size") && !entry.getKey().equals("sort")) {
-                    link += entry.getKey() + "=" + entry.getValue();
-                    link += "&";
-                }
-            }
-
-        return link;
-    }
 }
