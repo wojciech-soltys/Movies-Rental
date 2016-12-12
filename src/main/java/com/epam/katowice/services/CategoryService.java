@@ -1,6 +1,6 @@
 package com.epam.katowice.services;
 
-import com.epam.katowice.entities.Category;
+import com.epam.katowice.domain.Category;
 
 import java.util.List;
 

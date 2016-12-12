@@ -45,6 +45,17 @@
                 </span>
                 Movie Rental
             </a>
+            <ul class="uui-header-tools nav navbar-nav" style="display:inline-block;color:white;" sec:authorize="isAuthenticated()">
+                <li>
+                    Logged in databaseUser: <span sec:authentication="name"></span><br></br>
+                    Roles: <span sec:authentication="principal.authorities"></span>
+                </li>
+                <li style="display:inline-block;">
+                    <form action="#" th:action="@{/logout}" method="get">
+                        <button class="uui-button" type="submit">Logout</button>
+                    </form>
+                </li>
+            </ul>
         </nav>
     </div>
 </header>

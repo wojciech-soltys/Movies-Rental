@@ -4,8 +4,8 @@ import com.epam.katowice.common.MovieRentalTest;
 import com.epam.katowice.controllers.parameters.Filters;
 import com.epam.katowice.dao.FilmRepository;
 import com.epam.katowice.dto.FilmForm;
-import com.epam.katowice.entities.Film;
-import com.epam.katowice.entities.Rating;
+import com.epam.katowice.domain.Film;
+import com.epam.katowice.domain.Rating;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -197,7 +197,7 @@ public class FilmServiceImplTest extends MovieRentalTest {
         when(repository.findById(Mockito.any(Long.class))).thenReturn(film1);
 
         //when
-        Film returnFilm = filmService.findById(1L);
+        FilmForm returnFilm = filmService.findById(1L);
 
         //than
         assertThat(returnFilm.getId()).isEqualTo(film1.getId());
@@ -215,7 +215,7 @@ public class FilmServiceImplTest extends MovieRentalTest {
         when(repository.findById(Mockito.any(Long.class))).thenReturn(film2);
 
         //when
-        Film returnFilm = filmService.findById(2L);
+        FilmForm returnFilm = filmService.findById(2L);
 
         //than
         assertThat(returnFilm.getId()).isEqualTo(film2.getId());

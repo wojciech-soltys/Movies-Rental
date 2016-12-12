@@ -1,10 +1,10 @@
-package com.epam.katowice.entities.specifications;
+package com.epam.katowice.domain.specifications;
 
 import com.epam.katowice.controllers.parameters.Filters;
-import com.epam.katowice.entities.Actor;
-import com.epam.katowice.entities.Category;
-import com.epam.katowice.entities.Film;
-import com.epam.katowice.entities.Language;
+import com.epam.katowice.domain.Actor;
+import com.epam.katowice.domain.Category;
+import com.epam.katowice.domain.Film;
+import com.epam.katowice.domain.Language;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.jpa.domain.Specification;
 

@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" layout:decorator="fragments/layout">
+<head>
+    <title>Login page</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="uui-alert-messages fuchsia large" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true"><span></span><span></span></span>
+        </button>
+        <i class="fa fa-exclamation-triangle"></i>
+        <strong th:if="${username}">Hi <span th:text="${username}"/>, you do not have permission to access this page!</strong>
+        <strong th:if="!${username}">You do not have permission to access this page!</strong>
+        <span class="sr-only">Close</span>
+    </div>
+    <a class="uui-button" th:href="@{/index}">Index</a>
+</div>
+</body>
+</html>

@@ -1,6 +1,6 @@
 package com.epam.katowice.dto;
 
-import com.epam.katowice.entities.*;
+import com.epam.katowice.domain.*;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.constraints.Min;

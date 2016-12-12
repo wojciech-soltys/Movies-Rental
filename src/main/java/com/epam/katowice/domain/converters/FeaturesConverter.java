@@ -1,6 +1,6 @@
-package com.epam.katowice.entities.converters;
+package com.epam.katowice.domain.converters;
 
-import com.epam.katowice.entities.Features;
+import com.epam.katowice.domain.Features;
 
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;

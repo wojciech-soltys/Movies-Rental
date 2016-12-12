@@ -1,7 +1,7 @@
 package com.epam.katowice.services;
 
 import com.epam.katowice.dao.ActorRepository;
-import com.epam.katowice.entities.Actor;
+import com.epam.katowice.domain.Actor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

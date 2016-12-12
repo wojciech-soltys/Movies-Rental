@@ -33,7 +33,7 @@
                 <th><span class="uui-label" style="float:left">Rating:</span></th>
                 <th>
                     <select th:field="*{rating}">
-                        <option th:each="rate : ${T(com.epam.katowice.entities.Rating).values()}"
+                        <option th:each="rate : ${T(com.epam.katowice.domain.Rating).values()}"
                                 th:value="${rate}"
                                 th:text="${rate}">
                         </option>
@@ -62,7 +62,7 @@
                 <th><span class="uui-label" style="float:left">Special features:</span></th>
                 <th>
                     <select th:field="*{specialFeatures}" multiple="multiple">
-                        <option th:each="feature : ${T(com.epam.katowice.entities.Features).values()}"
+                        <option th:each="feature : ${T(com.epam.katowice.domain.Features).values()}"
                                 th:value="${feature}"
                                 th:text="${feature.name}">
                         </option>

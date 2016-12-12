@@ -1,7 +1,7 @@
 package com.epam.katowice.services;
 
 import com.epam.katowice.dao.LanguageRepository;
-import com.epam.katowice.entities.Language;
+import com.epam.katowice.domain.Language;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

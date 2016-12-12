@@ -19,7 +19,13 @@
             <div class="uui-slider range" style="width:250px"></div>
                 <div class="slider-info one">
                     Range:
-                    <span>1950 - 2016</span>
+                    <span>
+                        <script th:inline="javascript">
+                         /*<![CDATA[*/
+                            document.write(/*[[${filters.release_year_from}]] + "-" + [[${filters.release_year_to}]]*/);
+                         /*]]>*/
+                        </script>
+                    </span>
                 </div>
                 <input type="hidden" th:field="*{release_year_from}" />
                 <input type="hidden" th:field="*{release_year_to}" />
@@ -43,7 +49,13 @@
         <div class="uui-slider max-range" style="width:250px;"></div>
             <div class="slider-info two">
                 Value:
-                <span>180</span>
+                <span>
+                    <script th:inline="javascript">
+                     /*<![CDATA[*/
+                        document.write(/*[[${filters.maxLength}]]*/ 180);
+                     /*]]>*/
+                    </script>
+                </span>
             </div>
         <input type="hidden" th:field="*{maxLength}" value="180"/>
 
@@ -73,7 +85,8 @@
     </table>
     <div th:replace="fragments/paginationbar :: paginationbar"></div>
     </form>
-    <script>
+    <script th:inline="javascript">
+    /*<![CDATA[*/
         $(document).ready(function () {
             $('.uui-slider').slider();
         });
@@ -84,7 +97,8 @@
                     range: true,
                     min: 1950,
                     max: 2016,
-                    values: [1950, 2016],
+                    values: [ /*[[${filters.release_year_from}]], [[${filters.release_year_to}]]*/
+                    ],
                     slide: function (event, ui) {
                         $(this).siblings('.slider-info.one').find('span').text(ui.values[0] + "-" + ui.values[1]);
                         $("input[name='release_year_from']").val(ui.values[0]);
@@ -100,14 +114,15 @@
                 range: 'max',
                 min: 40,
                 max: 200,
-                value: 180,
+                value: /*[[${filters.maxLength}]]*/ 180,
                 slide: function (event, ui) {
                     $(this).siblings('.slider-info.two').find('span').text(ui.value);
-                    $("input[name='release_year_from']").val(ui.value);
+                    $("input[name='maxLength']").val(ui.value);
                 }
             });
         }
     );
+    /*]]>*/
     </script>
 </div>
 </body>

@@ -2,10 +2,10 @@ package com.epam.katowice.dao;
 
 import com.epam.katowice.common.MovieRentalTest;
 import com.epam.katowice.controllers.parameters.Filters;
-import com.epam.katowice.entities.Category;
-import com.epam.katowice.entities.Film;
-import com.epam.katowice.entities.Rating;
-import com.epam.katowice.entities.specifications.FilmSpecBuilder;
+import com.epam.katowice.domain.Category;
+import com.epam.katowice.domain.Film;
+import com.epam.katowice.domain.Rating;
+import com.epam.katowice.domain.specifications.FilmSpecBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;

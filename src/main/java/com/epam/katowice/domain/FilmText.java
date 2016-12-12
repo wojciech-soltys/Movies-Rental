@@ -1,4 +1,4 @@
-package com.epam.katowice.entities;
+package com.epam.katowice.domain;
 
 import javax.persistence.*;
 

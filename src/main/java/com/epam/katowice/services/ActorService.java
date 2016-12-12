@@ -1,6 +1,6 @@
 package com.epam.katowice.services;
 
-import com.epam.katowice.entities.Actor;
+import com.epam.katowice.domain.Actor;
 
 import java.util.List;
 

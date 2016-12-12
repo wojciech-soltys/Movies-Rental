@@ -1,7 +1,7 @@
-package com.epam.katowice.entities;
+package com.epam.katowice.domain;
 
-import com.epam.katowice.entities.converters.FeaturesConverter;
-import com.epam.katowice.entities.converters.RatingConverter;
+import com.epam.katowice.domain.converters.FeaturesConverter;
+import com.epam.katowice.domain.converters.RatingConverter;
 
 import javax.persistence.*;
 import java.util.Set;

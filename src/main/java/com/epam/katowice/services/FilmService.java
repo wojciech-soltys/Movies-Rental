@@ -2,7 +2,6 @@ package com.epam.katowice.services;
 
 import com.epam.katowice.controllers.parameters.Filters;
 import com.epam.katowice.dto.FilmForm;
-import com.epam.katowice.entities.Film;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -15,6 +14,6 @@ public interface FilmService {
     long getFilmsCount();
     List<FilmForm> getAllFilms();
     Page<FilmForm> getByPredicate(Filters filters, Pageable pageable);
-    Film findById(Long id);
+    FilmForm findById(Long id);
     FilmForm save(FilmForm film);
 }
