@@ -1,17 +1,24 @@
 <aside  th:fragment="menu">
     <div class="uui-side-bar">
         <ul class="sidebar-menu">
-            <li>
-                <a th:href="@{/}">
+            <li sec:authorize="!isAuthenticated()" th:classappend="${(#httpServletRequest.requestURL.toString().contains('login')) ? 'active' : ''}">
+                <a th:href="@{/login}">
+                    <span>Login</span>
+                </a>
+            </li>
+            <li th:classappend="${(#httpServletRequest.requestURL.toString().contains('index')) ? 'active' : ''}">
+                <a th:href="@{/index}">
                     <span>Index</span>
                 </a>
             </li>
-            <li th:classappend="${(#httpServletRequest.requestURL.toString().contains('movies')) ? 'active' : ''}">
+            <li th:classappend="${(#httpServletRequest.requestURL.toString().contains('movies')) ? 'active' : ''}"
+                sec:authorize="hasAnyRole('ROLE_USER','ROLE_ADMIN')">
                 <a th:href="@{/movies}">
                     <span>Movies</span>
                 </a>
             </li>
-            <li>
+            <li th:classappend="${(#httpServletRequest.requestURL.toString().contains('addMovie')) ? 'active' : ''}"
+                sec:authorize="hasRole('ROLE_ADMIN')">
                 <a th:href="@{/addMovie}">
                     <span>Add movie</span>
                 </a>

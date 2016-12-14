@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" layout:decorator="fragments/layout">
+<head>
+    <title>Login page</title>
+</head>
+<body>
+    <div layout:fragment="content">
+        <div class="uui-alert-messages fuchsia large" role="alert" th:if="${loginError}">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true"><span></span><span></span></span>
+            </button>
+            <i class="fa fa-exclamation-triangle"></i>
+            <strong>Wrong username or password!</strong>
+            <span class="sr-only">Close</span>
+        </div>
+        <div class="uui-alert-messages blue large" role="alert" th:if="${logout}">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true"><span></span><span></span></span>
+            </button>
+            <i class="fa fa-exclamation-triangle"></i>
+            <strong>You've been logged out successfully!</strong>
+            <span class="sr-only">Close</span>
+        </div>
+        <form th:action="@{/login}" method="post">
+            <span class="uui-label">Username</span>:
+            <input type="text" class="uui-form-element" id="username" name="username" autofocus="autofocus" /> <br />
+            <span class="uui-label">Password</span>:
+            <input type="password" class="uui-form-element" id="password" name="password" /> <br />
+            <button class="uui-button" type="submit">Log in</button>
+        </form>
+    </div>
+</body>
+</html>

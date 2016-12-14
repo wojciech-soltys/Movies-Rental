@@ -1,4 +1,4 @@
-package com.epam.katowice.entities;
+package com.epam.katowice.domain;
 
 /**
  * Created by Wojciech_Soltys on 11.08.2016.

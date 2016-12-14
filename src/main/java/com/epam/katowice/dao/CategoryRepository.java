@@ -1,6 +1,6 @@
 package com.epam.katowice.dao;
 
-import com.epam.katowice.entities.Category;
+import com.epam.katowice.domain.Category;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 

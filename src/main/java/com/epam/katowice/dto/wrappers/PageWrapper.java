@@ -1,4 +1,4 @@
-package wrappers;
+package com.epam.katowice.dto.wrappers;
 
 
 

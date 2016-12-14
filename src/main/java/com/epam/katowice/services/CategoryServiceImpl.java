@@ -1,7 +1,7 @@
 package com.epam.katowice.services;
 
 import com.epam.katowice.dao.CategoryRepository;
-import com.epam.katowice.entities.Category;
+import com.epam.katowice.domain.Category;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -1,9 +1,9 @@
 package com.epam.katowice.controllers.parameters;
 
-import com.epam.katowice.entities.Category;
-import com.epam.katowice.entities.Language;
-import com.epam.katowice.entities.Rating;
-import com.epam.katowice.entities.converters.RatingConverter;
+import com.epam.katowice.domain.Category;
+import com.epam.katowice.domain.Language;
+import com.epam.katowice.domain.Rating;
+import com.epam.katowice.domain.converters.RatingConverter;
 
 import javax.persistence.Convert;
 import java.util.ArrayList;

@@ -1,6 +1,6 @@
 package com.epam.katowice.services;
 
-import com.epam.katowice.entities.Language;
+import com.epam.katowice.domain.Language;
 
 import java.util.List;
 

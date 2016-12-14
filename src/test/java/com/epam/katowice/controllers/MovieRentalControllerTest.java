@@ -2,8 +2,8 @@ package com.epam.katowice.controllers;
 
 import com.epam.katowice.common.MovieRentalTest;
 import com.epam.katowice.controllers.parameters.Filters;
+import com.epam.katowice.domain.*;
 import com.epam.katowice.dto.FilmForm;
-import com.epam.katowice.entities.*;
 import com.epam.katowice.services.ActorService;
 import com.epam.katowice.services.CategoryService;
 import com.epam.katowice.services.FilmService;
@@ -20,21 +20,20 @@ import org.springframework.data.web.HateoasPageableHandlerMethodArgumentResolver
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.ui.ExtendedModelMap;
-import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import javax.servlet.Filter;
 import java.util.Arrays;
-import java.util.Locale;
 
 import static com.epam.katowice.controllers.MovieRentalController.DETAILS_ENDPOINT;
 import static com.epam.katowice.controllers.MovieRentalController.NEW_MOVIE_VIEW;
 import static org.hamcrest.Matchers.*;
 import static org.mockito.Mockito.when;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -44,7 +43,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class MovieRentalControllerTest extends MovieRentalTest {
 
     @Autowired
-    WebApplicationContext webCtx;
+    private Filter springSecurityFilterChain;
 
     private MockMvc mockMvc;
 
@@ -68,12 +67,8 @@ public class MovieRentalControllerTest extends MovieRentalTest {
         MockitoAnnotations.initMocks(this);
         mockMvc = MockMvcBuilders.standaloneSetup(movieController)
                 .setCustomArgumentResolvers(new HateoasPageableHandlerMethodArgumentResolver())
-                .setViewResolvers(new ViewResolver() {
-                    @Override
-                    public View resolveViewName(String viewName, Locale locale) throws Exception {
-                        return new MappingJackson2JsonView();
-                    }
-                })
+                .setViewResolvers((ViewResolver) (viewName, locale) -> new MappingJackson2JsonView())
+                .addFilters(springSecurityFilterChain)
                 .build();
     }
 
@@ -102,17 +97,11 @@ public class MovieRentalControllerTest extends MovieRentalTest {
     @Test
     public void testGetFilms() throws Exception {
         //given
-        FilmForm film1 = new FilmForm(1L, "title1", "description1", 2016, new Integer(100), Rating.NC17);
-        FilmForm film2 = new FilmForm(2L, "title2", "description2", 2016, new Integer(200), Rating.NC17);
-
-        //when
-        when(filmService.getByPredicate(Mockito.any(Filters.class), Mockito.any(Pageable.class))).
-                thenReturn(new PageImpl<FilmForm>(Arrays.asList(film1,film2)));
-        when(categoryService.findAll()).thenReturn(Arrays.asList(new Category()));
-        when(languageService.findAll()).thenReturn(Arrays.asList(new Language()));
+        prepareListOfMovies();
 
         //then
-        mockMvc.perform(get("/movies"))
+        mockMvc.perform(get("/movies")
+                .with(user("admin").roles("ADMIN")))
                 .andExpect(status().isOk())
                 .andExpect(view().name("films"))
             .andExpect(model().attribute("page", hasProperty("content", hasSize(2))))
@@ -138,11 +127,9 @@ public class MovieRentalControllerTest extends MovieRentalTest {
 
     @Test
     public void testGetFilmById() throws Exception {
-        Film film1 = new Film(1L, "title1", "description1", 2016, new Integer(100), Rating.NC17);
-
-        when(filmService.findById(Mockito.any(Long.class))).thenReturn(film1);
-        when(categoryService.findAll()).thenReturn(Arrays.asList(new Category()));
-        when(languageService.findAll()).thenReturn(Arrays.asList(new Language()));
+        //given, when
+        when(filmService.findById(Mockito.any(Long.class))).thenReturn(prepareMovie());
+        prepareDictionaries();
 
         mockMvc.perform(get(DETAILS_ENDPOINT ).param("id","1"))
                 .andExpect(status().isOk())
@@ -158,23 +145,94 @@ public class MovieRentalControllerTest extends MovieRentalTest {
 
     @Test
     public void testAddMovie() throws Exception {
-        FilmForm film1 = new FilmForm(1L, "title1", "description1", 2016, new Integer(100), Rating.NC17);
+        //given, when
+        when(filmService.save(Mockito.any(FilmForm.class))).thenReturn(prepareMovie());
+        prepareDictionaries();
 
-        when(filmService.save(Mockito.any(FilmForm.class))).thenReturn(film1);
+        //then
+        mockMvc.perform(get(MovieRentalController.NEW_MOVIE_ENDPOINT)
+                .with(user("admin").roles("ADMIN"))
+                .param("title", "TEST123"))
+                .andExpect(status().isOk())
+                .andExpect(view().name(NEW_MOVIE_VIEW));
+    }
+
+    private FilmForm prepareMovie() {
+        //given
+        return new FilmForm(1L, "title1", "description1", 2016, new Integer(100), Rating.NC17);
+    }
+
+    private void prepareDictionaries() {
         when(categoryService.findAll()).thenReturn(Arrays.asList(new Category()));
         when(languageService.findAll()).thenReturn(Arrays.asList(new Language()));
         when(actorService.findAll()).thenReturn(Arrays.asList(new Actor()));
+    }
 
-        mockMvc.perform(get("/addMovie")
-                .param("title", "TEST123"))
-                .andExpect(status().isOk())
-                .andExpect(view().name(NEW_MOVIE_VIEW))
-/*                .andExpect(model().attribute("movie", allOf(
-                        hasProperty("description", is("description1")),
-                        hasProperty("title", is("title1")),
-                        hasProperty("releaseYear", is(2016)),
-                        hasProperty("length", is(100))
-                )))*/
-        ;
+    @Test
+    public void testUserShouldNotHaveAccessToAddMovie() throws Exception {
+        mockMvc.perform(get(MovieRentalController.NEW_MOVIE_ENDPOINT)
+                .with(user("user").roles("USER")))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    public void testAdminShouldHaveAccessToAddMovie() throws Exception {
+        mockMvc.perform(get(MovieRentalController.NEW_MOVIE_ENDPOINT)
+                .with(user("admin").roles("ADMIN")))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void testAllUsersShouldHaveAccessToIndex() throws Exception {
+        mockMvc.perform(get(MovieRentalController.INDEX_ENDPOINT))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void testAdminShouldHaveAccessToMovieList() throws Exception {
+        //given, when
+        prepareListOfMovies();
+
+
+        //doNothing().when(categoryService).findAll();
+        //doNothing().when(languageService).findAll();
+
+        //then
+        mockMvc.perform(get(MovieRentalController.MOVIES_LIST_ENDPOINT)
+                .with(user("admin").roles("ADMIN")))
+                .andExpect(status().isOk());
+    }
+
+    private void prepareListOfMovies() {
+        //given
+        FilmForm film1 = new FilmForm(1L, "title1", "description1", 2016, new Integer(100), Rating.NC17);
+        FilmForm film2 = new FilmForm(2L, "title2", "description2", 2016, new Integer(200), Rating.NC17);
+
+        //when
+        when(filmService.getByPredicate(Mockito.any(Filters.class), Mockito.any(Pageable.class))).
+                thenReturn(new PageImpl<>(Arrays.asList(film1,film2)));
+        prepareDictionaries();
+    }
+
+    @Test
+    public void testUserShouldHaveAccessToMovieList() throws Exception {
+        //given, when
+        prepareListOfMovies();
+
+        //then
+        mockMvc.perform(get(MovieRentalController.MOVIES_LIST_ENDPOINT)
+                .with(user("user").roles("USER")))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void testNoAuthenticatedUserShouldNotHaveAccessToMovieList() throws Exception {
+        //given, when
+        prepareListOfMovies();
+
+        //then
+        mockMvc.perform(get(MovieRentalController.MOVIES_LIST_ENDPOINT)
+                .with(user("user").roles("OTHER")))
+                .andExpect(status().isForbidden());
     }
 }

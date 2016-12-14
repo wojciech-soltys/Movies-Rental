@@ -2,11 +2,13 @@ package com.epam.katowice.controllers;
 
 import com.epam.katowice.controllers.parameters.Filters;
 import com.epam.katowice.dto.FilmForm;
-import com.epam.katowice.entities.Film;
+import com.epam.katowice.dto.wrappers.PageWrapper;
 import com.epam.katowice.services.ActorService;
 import com.epam.katowice.services.CategoryService;
 import com.epam.katowice.services.FilmService;
 import com.epam.katowice.services.LanguageService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
@@ -17,8 +19,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import wrappers.PageWrapper;
 
+import java.security.Principal;
 import java.util.Map;
 
 /**
@@ -28,16 +30,25 @@ import java.util.Map;
 @Controller
 public class MovieRentalController {
 
-    static final String INDEX_ENDPOINT = "/";
-    static final String NEW_MOVIE_ENDPOINT = "/addMovie";
-    static final String DETAILS_ENDPOINT = "/details";
-    static final String MOVIES_LIST_ENDPOINT = "/movies";
+    private static Logger logger = LoggerFactory.getLogger(MovieRentalController.class);
+
+    public static final String INDEX_ENDPOINT = "/index";
+    public static final String NEW_MOVIE_ENDPOINT = "/addMovie";
+    public static final String DETAILS_ENDPOINT = "/details";
+    public static final String MOVIES_LIST_ENDPOINT = "/movies";
+    public static final String LOGIN_ENDPOINT = "/login";
+    public static final String LOGIN_ERROR_ENDPOINT = "/login-error";
+    public static final String LOGOUT_ENDPOINT = "/logout";
+    public static final String LOGOUT_DONE_ENDPOINT = "/logout-done";
+    public static final String ACCESS_DENIED_ENDPOINT = "/403";
 
     static final String REDIRECT_PREFIX = "redirect:";
     static final String INDEX_VIEW = "index";
     static final String NEW_MOVIE_VIEW = "addMovie";
     static final String DETAILS_VIEW = "details";
     static final String MOVIES_LIST_VIEW = "films";
+    static final String LOGIN_VIEW = "login";
+    static final String ACCESS_DENIED_VIEW = "403";
 
     static final String MOVIE_COUNT_PARAMETER = "movieCount";
     static final String PAGE_PARAMETER = "page";
@@ -49,6 +60,32 @@ public class MovieRentalController {
     static final String LANGUAGES_PARAMETER = "languages";
     static final String ACTORS_PARAMETER = "actors";
 
+    // Login form
+    @RequestMapping(LOGIN_ENDPOINT)
+    public String login() {
+        return LOGIN_VIEW;
+    }
+
+    // Login form with error
+    @RequestMapping(LOGIN_ERROR_ENDPOINT)
+    public String loginError(Model model) {
+        model.addAttribute("loginError", true);
+        return LOGIN_VIEW;
+    }
+
+    // Logout
+    @RequestMapping(LOGOUT_DONE_ENDPOINT)
+    public String logout(Model model) {
+        model.addAttribute("logout", true);
+        return LOGIN_VIEW;
+    }
+
+    // Access denied
+    @RequestMapping(ACCESS_DENIED_ENDPOINT)
+    public String accessDenied(Model model, Principal user) {
+        model.addAttribute("username", user == null ? "" : user.getName());
+        return ACCESS_DENIED_VIEW;
+    }
 
     @RequestMapping(INDEX_ENDPOINT)
     public String getFilmsCount(Model model) {
@@ -69,7 +106,7 @@ public class MovieRentalController {
 
     @RequestMapping(DETAILS_ENDPOINT)
     public String view(@RequestParam Long id, Model model) {
-        Film film = filmService.findById(id);
+        FilmForm film = filmService.findById(id);
         model.addAttribute(FILM_PARAMETER, film);
         return DETAILS_VIEW;
     }
