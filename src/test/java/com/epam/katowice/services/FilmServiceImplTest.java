@@ -1,16 +1,23 @@
 package com.epam.katowice.services;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.when;
+
 import com.epam.katowice.common.MovieRentalTest;
 import com.epam.katowice.controllers.parameters.Filters;
 import com.epam.katowice.dao.FilmRepository;
-import com.epam.katowice.dto.FilmForm;
 import com.epam.katowice.domain.Film;
 import com.epam.katowice.domain.Rating;
+import com.epam.katowice.dto.FilmForm;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -18,9 +25,6 @@ import org.testng.annotations.Test;
 
 import java.util.Arrays;
 import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.when;
 
 /**
  * Created by Wojciech_Soltys on 09.08.2016.
@@ -194,7 +198,7 @@ public class FilmServiceImplTest extends MovieRentalTest {
         Film film2 = new Film(2L, "title2", "description2", 2016, new Integer(200), Rating.NC17);
         repository.save(film2);
 
-        when(repository.findById(Mockito.any(Long.class))).thenReturn(film1);
+        when(repository.findById(1L)).thenReturn(film1);
 
         //when
         FilmForm returnFilm = filmService.findById(1L);
