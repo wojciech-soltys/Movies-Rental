@@ -60,6 +60,21 @@ public class MovieRentalController {
     static final String LANGUAGES_PARAMETER = "languages";
     static final String ACTORS_PARAMETER = "actors";
 
+
+    private final FilmService filmService;
+    private final CategoryService categoryService;
+    private final LanguageService languageService;
+    private final ActorService actorService;
+
+    @Autowired
+    public MovieRentalController(FilmService filmService, CategoryService categoryService,
+                                 LanguageService languageService, ActorService actorService) {
+        this.filmService = filmService;
+        this.categoryService = categoryService;
+        this.languageService = languageService;
+        this.actorService = actorService;
+    }
+
     // Login form
     @RequestMapping(LOGIN_ENDPOINT)
     public String login() {
@@ -159,16 +174,4 @@ public class MovieRentalController {
             model.addAttribute(PAGE_SORT_PARAMETER, "");
         }
     }
-
-    @Autowired
-    private FilmService filmService;
-
-    @Autowired
-    private CategoryService categoryService;
-
-    @Autowired
-    private LanguageService languageService;
-
-    @Autowired
-    private ActorService actorService;
 }

@@ -3,8 +3,17 @@ package com.epam.katowice.domain;
 import com.epam.katowice.domain.converters.FeaturesConverter;
 import com.epam.katowice.domain.converters.RatingConverter;
 
-import javax.persistence.*;
 import java.util.Set;
+import javax.persistence.Column;
+import javax.persistence.Convert;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToOne;
 
 /**
  * Created by Wojciech_Soltys on 09.08.2016.
@@ -20,7 +29,6 @@ public class Film {
 
     private String title;
 
-    @Column(name = "description")
     private String description;
 
     @Column(name = "release_year")
@@ -37,7 +45,7 @@ public class Film {
             inverseJoinColumns={@JoinColumn(name="category_id")})
     private Set<Category> categories;
 
-    @OneToOne(fetch=FetchType.LAZY)
+    @OneToOne
     @JoinColumn(name="language_id")
     private Language language;
 

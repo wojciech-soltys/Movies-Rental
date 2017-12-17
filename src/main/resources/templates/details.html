@@ -34,7 +34,7 @@
     <ul class="uui-items-list small">
         <li class="item-body" th:each="actor : *{actors}">
             <div class="item-section content">
-                <span th:text="${actor.first_name + ' ' + actor.last_name}"></span>
+                <span th:text="${actor.firstName + ' ' + actor.lastName}"></span>
             </div>
         </li>
     </ul>

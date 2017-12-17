@@ -1,10 +1,13 @@
 package com.epam.katowice.domain;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 
-/**
- * Created by Wojciech_Soltys on 01.09.2016.
- */
 @Entity
 public class FilmText {
 
@@ -20,6 +23,9 @@ public class FilmText {
     @OneToOne
     @JoinColumn(name = "film_id")
     private Film film;
+
+    public FilmText() {
+    }
 
     public Long getId() {
         return id;

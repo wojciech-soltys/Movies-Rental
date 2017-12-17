@@ -44,8 +44,8 @@
             <tr>
                 <th><span class="uui-label" style="float:left">Language:</span></th>
                 <th>
-                    <select th:field="*{language.language_id}">
-                        <option th:each="language : ${languages}" th:value="${language.language_id}" th:text="${language.name}"/>
+                    <select th:field="*{language.languageID}">
+                        <option th:each="language : ${languages}" th:value="${language.languageID}" th:text="${language.name}"/>
                     </select>
                 </th>
                 <th th:errors="*{language}">Rating Error</th>
@@ -54,7 +54,7 @@
                 <th><span class="uui-label" style="float:left">Category:</span></th>
                 <th>
                     <select th:field="*{categories}" multiple="multiple">
-                        <option th:each="category : ${categories}" th:value="${category.category_id}" th:text="${category.name}"/>
+                        <option th:each="category : ${categories}" th:value="${category.categoryID}" th:text="${category.name}"/>
                     </select>
                 </th>
             </tr>
@@ -73,7 +73,7 @@
                 <th><span class="uui-label" style="float:left">Actors:</span></th>
                 <th>
                     <select th:field="*{actors}" multiple="multiple">
-                        <option th:each="actor : ${actors}" th:value="${actor.actor_id}" th:text="${actor.first_name + ' ' + actor.last_name}"/>
+                        <option th:each="actor : ${actors}" th:value="${actor.actorID}" th:text="${actor.firstName + ' ' + actor.lastName}"/>
                     </select>
                 </th>
             </tr>

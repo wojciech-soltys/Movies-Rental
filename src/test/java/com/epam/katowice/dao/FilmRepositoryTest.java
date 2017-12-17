@@ -1,5 +1,7 @@
 package com.epam.katowice.dao;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.epam.katowice.common.MovieRentalTest;
 import com.epam.katowice.controllers.parameters.Filters;
 import com.epam.katowice.domain.Category;
@@ -19,8 +21,6 @@ import org.testng.annotations.Test;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 public class FilmRepositoryTest extends MovieRentalTest {
 
@@ -181,7 +181,7 @@ public class FilmRepositoryTest extends MovieRentalTest {
         //given
         Film film1 = new Film(1L, "title1", "description1", 2014, new Integer(100), Rating.NC17);
         Category category = new Category();
-        category.setCategory_id(new Long(1));
+        category.setCategoryID(new Long(1));
         category.setName("Action");
         categoryRepository.save(category);
         Set<Category> categories = new HashSet<>();
