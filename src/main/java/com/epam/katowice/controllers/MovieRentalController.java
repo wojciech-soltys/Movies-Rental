@@ -60,8 +60,7 @@ public class MovieRentalController {
     static final String LANGUAGES_PARAMETER = "languages";
     static final String ACTORS_PARAMETER = "actors";
 
-
-    private final FilmService filmService;
+    private FilmService filmService;
     private final CategoryService categoryService;
     private final LanguageService languageService;
     private final ActorService actorService;

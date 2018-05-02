@@ -1,7 +1,5 @@
 package com.epam.katowice.dao;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import com.epam.katowice.common.MovieRentalTest;
 import com.epam.katowice.controllers.parameters.Filters;
 import com.epam.katowice.domain.Category;
@@ -20,7 +18,10 @@ import org.testng.annotations.Test;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class FilmRepositoryTest extends MovieRentalTest {
 
@@ -31,16 +32,16 @@ public class FilmRepositoryTest extends MovieRentalTest {
     private CategoryRepository categoryRepository;
 
     @BeforeMethod
-    public void setUp() throws Exception {
+    public void setUp() {
     }
 
     @AfterMethod
-    public void tearDown() throws Exception {
+    public void tearDown() {
         repository.deleteAll();
     }
 
     @Test
-    public void testGetFilmsCount() throws Exception {
+    public void testGetFilmsCount() {
         //given
         Film film = new Film("AAA");
         repository.save(film);
@@ -56,7 +57,7 @@ public class FilmRepositoryTest extends MovieRentalTest {
 
     @Test
     @Transactional
-    public void testGetAllFilms() throws Exception {
+    public void testGetAllFilms() {
         //given
         Film film1 = new Film(1L, "title1", "description1", 2016, new Integer(100), Rating.NC17);
         repository.save(film1);
@@ -72,7 +73,7 @@ public class FilmRepositoryTest extends MovieRentalTest {
 
     @Test
     @Transactional
-    public void testGetFilmsPageOne() throws Exception {
+    public void testGetFilmsPageOne() {
         //given
         Film film1 = new Film(1L, "title1", "description1", 2016, new Integer(100), Rating.NC17);
         repository.save(film1);
@@ -91,7 +92,7 @@ public class FilmRepositoryTest extends MovieRentalTest {
 
     @Test
     @Transactional
-    public void testGetFilmsPageTwo() throws Exception {
+    public void testGetFilmsPageTwo() {
         //given
         Film film1 = new Film(1L, "title1", "description1", 2016, new Integer(100), Rating.NC17);
         repository.save(film1);
@@ -110,7 +111,7 @@ public class FilmRepositoryTest extends MovieRentalTest {
 
     @Test
     @Transactional
-    public void testFindFilmsOne() throws Exception {
+    public void testFindFilmsOne() {
         //given
         Film film1 = new Film(1L, "title1", "description1", 2014, new Integer(100), Rating.NC17);
         repository.save(film1);
@@ -132,7 +133,7 @@ public class FilmRepositoryTest extends MovieRentalTest {
 
     @Test
     @Transactional
-    public void testFindFilmsTwo() throws Exception {
+    public void testFindFilmsTwo() {
         //given
         Film film1 = new Film(1L, "title1", "description1", 2014, new Integer(100), Rating.NC17);
         repository.save(film1);
@@ -156,7 +157,7 @@ public class FilmRepositoryTest extends MovieRentalTest {
 
     @Test
     @Transactional
-    public void testFindByIdOne() throws Exception {
+    public void testFindByIdOne() {
         //given
         Film film1 = new Film(null, "title1", "description1", 2014, new Integer(100), Rating.NC17);
         film1 = repository.save(film1);
@@ -164,15 +165,15 @@ public class FilmRepositoryTest extends MovieRentalTest {
         film2 = repository.save(film2);
 
         //when
-        Film repoFilm1 = repository.findById(film1.getId());
-        Film repoFilm2 = repository.findById(film2.getId());
+        Optional<Film> repoFilm1 = repository.findById(film1.getId());
+        Optional<Film> repoFilm2 = repository.findById(film2.getId());
 
         //than
-        assertThat(film1.getId()).isEqualTo(repoFilm1.getId());
-        assertThat(film1.getTitle()).isEqualTo(repoFilm1.getTitle());
+        assertThat(film1.getId()).isEqualTo(repoFilm1.get().getId());
+        assertThat(film1.getTitle()).isEqualTo(repoFilm1.get().getTitle());
 
-        assertThat(film2.getId()).isEqualTo(repoFilm2.getId());
-        assertThat(film2.getTitle()).isEqualTo(repoFilm2.getTitle());
+        assertThat(film2.getId()).isEqualTo(repoFilm2.get().getId());
+        assertThat(film2.getTitle()).isEqualTo(repoFilm2.get().getTitle());
     }
 
     @Test
@@ -190,7 +191,7 @@ public class FilmRepositoryTest extends MovieRentalTest {
         film1 = repository.save(film1);
 
         //when
-        Film repoFilm = repository.findById(film1.getId());
+        Film repoFilm = repository.findById(film1.getId()).get();
 
         //then
         assertThat(film1.getId()).isEqualTo(repoFilm.getId());

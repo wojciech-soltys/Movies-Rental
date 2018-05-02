@@ -3,9 +3,9 @@ package com.epam.katowice.services;
 import com.epam.katowice.common.MovieRentalTest;
 import com.epam.katowice.controllers.parameters.Filters;
 import com.epam.katowice.dao.FilmRepository;
-import com.epam.katowice.dto.FilmForm;
 import com.epam.katowice.domain.Film;
 import com.epam.katowice.domain.Rating;
+import com.epam.katowice.dto.FilmForm;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -18,6 +18,7 @@ import org.testng.annotations.Test;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
@@ -33,18 +34,18 @@ public class FilmServiceImplTest extends MovieRentalTest {
     private FilmService filmService;
 
     @BeforeMethod
-    public void setUp() throws Exception {
+    public void setUp() {
         MockitoAnnotations.initMocks(this);
         filmService = new FilmServiceImpl(repository);
     }
 
     @AfterMethod
-    public void tearDown() throws Exception {
+    public void tearDown() {
         repository.deleteAll();
     }
 
     @Test
-    public void testGetFilmsCount() throws Exception {
+    public void testGetFilmsCount() {
         // given
         when(repository.count()).thenReturn(1000l);
 
@@ -57,7 +58,7 @@ public class FilmServiceImplTest extends MovieRentalTest {
 
 
     @Test
-    public void testGetAllFilms() throws Exception {
+    public void testGetAllFilms() {
         // given
         Film film1 = new Film(1L, "title1", "description1", 2016, new Integer(100), Rating.NC17);
         repository.save(film1);
@@ -100,7 +101,7 @@ public class FilmServiceImplTest extends MovieRentalTest {
 
 
     @Test
-    public void testGetPageOfFilmsDesc() throws Exception {
+    public void testGetPageOfFilmsDesc() {
         //given
         Film film1 = new Film(1L, "title1", "description1", 2016, new Integer(100), Rating.NC17);
         repository.save(film1);
@@ -109,7 +110,7 @@ public class FilmServiceImplTest extends MovieRentalTest {
 
         Pageable pageRequest = new PageRequest(0,10, Sort.Direction.DESC, "title");
 
-        when(repository.findAll(pageRequest)).thenReturn(new PageImpl<>(Arrays.asList(film1,film2)));;
+        when(repository.findAll(pageRequest)).thenReturn(new PageImpl<>(Arrays.asList(film1, film2)));
 
         // when
         Page<Film> page = repository.findAll(pageRequest);
@@ -120,7 +121,7 @@ public class FilmServiceImplTest extends MovieRentalTest {
     }
 
     @Test
-    public void testGetPageOfFilmsAsc() throws Exception {
+    public void testGetPageOfFilmsAsc() {
         //given
         Film film1 = new Film(1L, "title1", "description1", 2016, new Integer(100), Rating.NC17);
         repository.save(film1);
@@ -140,7 +141,7 @@ public class FilmServiceImplTest extends MovieRentalTest {
     }
 
     @Test
-    public void testFindFilmsOne() throws Exception {
+    public void testFindFilmsOne() {
         //given
         Film film1 = new Film(1L, "title1", "description1", 2016, new Integer(100), Rating.NC17);
         repository.save(film1);
@@ -164,7 +165,7 @@ public class FilmServiceImplTest extends MovieRentalTest {
     }
 
     @Test
-    public void testFindFilmsTwo() throws Exception {
+    public void testFindFilmsTwo() {
         //given
         Film film1 = new Film(1L, "title1", "description1", 2016, new Integer(100), Rating.NC17);
         repository.save(film1);
@@ -187,14 +188,14 @@ public class FilmServiceImplTest extends MovieRentalTest {
     }
 
     @Test
-    public void testFindByIdOne() throws Exception {
+    public void testFindByIdOne() {
         //given
         Film film1 = new Film(1L, "title1", "description1", 2016, new Integer(100), Rating.NC17);
         repository.save(film1);
         Film film2 = new Film(2L, "title2", "description2", 2016, new Integer(200), Rating.NC17);
         repository.save(film2);
 
-        when(repository.findById(Mockito.any(Long.class))).thenReturn(film1);
+        when(repository.findById(Mockito.any(Long.class))).thenReturn(Optional.of(film1));
 
         //when
         FilmForm returnFilm = filmService.findById(1L);
@@ -205,14 +206,14 @@ public class FilmServiceImplTest extends MovieRentalTest {
     }
 
     @Test
-    public void testFindByIdTwo() throws Exception {
+    public void testFindByIdTwo() {
         //given
         Film film1 = new Film(1L, "title1", "description1", 2016, new Integer(100), Rating.NC17);
         repository.save(film1);
         Film film2 = new Film(2L, "title2", "description2", 2016, new Integer(200), Rating.NC17);
         repository.save(film2);
 
-        when(repository.findById(Mockito.any(Long.class))).thenReturn(film2);
+        when(repository.findById(Mockito.any(Long.class))).thenReturn(Optional.of(film2));
 
         //when
         FilmForm returnFilm = filmService.findById(2L);
@@ -223,7 +224,7 @@ public class FilmServiceImplTest extends MovieRentalTest {
     }
 
     @Test
-    public void testSaveFilm() throws Exception {
+    public void testSaveFilm() {
         //given
         Film film1 = new Film(1L, "title1", "description1", 2016, new Integer(100), Rating.NC17);
         FilmForm filmForm1 = new FilmForm(1L, "title1", "description1", 2016, new Integer(100), Rating.NC17);
