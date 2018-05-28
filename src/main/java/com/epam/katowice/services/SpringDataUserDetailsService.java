@@ -1,9 +1,8 @@
 package com.epam.katowice.services;
 
-import com.epam.katowice.domain.DatabaseUser;
+import com.epam.katowice.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.AuthorityUtils;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -25,15 +24,15 @@ public class SpringDataUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String name) throws UsernameNotFoundException {
 
-        DatabaseUser databaseUser = userService.findByName(name);
+        User user = userService.findByName(name);
 
-        if(databaseUser == null) {
+        if(user == null) {
             throw new UsernameNotFoundException(String.format("User with name: %s cannot be found", name));
         }
-        String[] roles = new String[databaseUser.getRoles().size()];
-        databaseUser.getRoles().toArray(roles);
+        String[] roles = new String[user.getRoles().size()];
+        user.getRoles().toArray(roles);
 
-        UserDetails userDetails =  new User(name, databaseUser.getPassword(), AuthorityUtils.createAuthorityList(roles));
+        UserDetails userDetails =  new org.springframework.security.core.userdetails.User(name, user.getPassword(), AuthorityUtils.createAuthorityList(roles));
         return userDetails;
     }
 }

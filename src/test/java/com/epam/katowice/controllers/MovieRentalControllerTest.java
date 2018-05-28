@@ -2,7 +2,10 @@ package com.epam.katowice.controllers;
 
 import com.epam.katowice.common.MovieRentalTest;
 import com.epam.katowice.controllers.parameters.Filters;
-import com.epam.katowice.domain.*;
+import com.epam.katowice.domain.Actor;
+import com.epam.katowice.domain.Category;
+import com.epam.katowice.domain.Language;
+import com.epam.katowice.domain.Rating;
 import com.epam.katowice.dto.FilmForm;
 import com.epam.katowice.services.ActorService;
 import com.epam.katowice.services.CategoryService;
@@ -63,7 +66,7 @@ public class MovieRentalControllerTest extends MovieRentalTest {
     private MovieRentalController movieController;
 
     @BeforeMethod
-    public void setUp() throws Exception {
+    public void setUp() {
         MockitoAnnotations.initMocks(this);
         mockMvc = MockMvcBuilders.standaloneSetup(movieController)
                 .setCustomArgumentResolvers(new HateoasPageableHandlerMethodArgumentResolver())
@@ -73,12 +76,12 @@ public class MovieRentalControllerTest extends MovieRentalTest {
     }
 
     @AfterMethod
-    public void tearDown() throws Exception {
+    public void tearDown() {
 
     }
 
     @Test
-    public void testGetFilmsCount() throws Exception {
+    public void testGetFilmsCount() {
         // given
         when(filmService.getFilmsCount()).thenReturn(1000l);
         ExtendedModelMap model = new ExtendedModelMap();
@@ -159,7 +162,8 @@ public class MovieRentalControllerTest extends MovieRentalTest {
 
     private FilmForm prepareMovie() {
         //given
-        return new FilmForm(1L, "title1", "description1", 2016, new Integer(100), Rating.NC17);
+        return new FilmForm(1L, "title1", "description1", 2016,
+                new Integer(100), Rating.NC17);
     }
 
     private void prepareDictionaries() {

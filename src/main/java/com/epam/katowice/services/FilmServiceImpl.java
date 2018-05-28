@@ -2,9 +2,9 @@ package com.epam.katowice.services;
 
 import com.epam.katowice.controllers.parameters.Filters;
 import com.epam.katowice.dao.FilmRepository;
-import com.epam.katowice.dto.FilmForm;
 import com.epam.katowice.domain.Film;
 import com.epam.katowice.domain.specifications.FilmSpecBuilder;
+import com.epam.katowice.dto.FilmForm;
 import com.epam.katowice.mappers.FilmMapper;
 import fr.xebia.extras.selma.Selma;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,7 +50,7 @@ public class FilmServiceImpl implements FilmService {
 
     @Override
     public FilmForm findById(Long id) {
-        return mapper.asFilmDto(filmRepository.findById(id));
+        return mapper.asFilmDto(filmRepository.findById(id).get());
     }
 
     @Override
