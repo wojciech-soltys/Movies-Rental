@@ -1,12 +1,9 @@
 package com.epam.katowice.controllers;
 
 import com.epam.katowice.controllers.parameters.Filters;
-import com.epam.katowice.dto.FilmForm;
+import com.epam.katowice.dto.FilmDto;
 import com.epam.katowice.dto.wrappers.PageWrapper;
-import com.epam.katowice.services.ActorService;
-import com.epam.katowice.services.CategoryService;
-import com.epam.katowice.services.FilmService;
-import com.epam.katowice.services.LanguageService;
+import com.epam.katowice.services.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,10 +19,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.security.Principal;
 import java.util.Map;
-
-/**
- * Created by Wojciech_Soltys on 08.08.2016.
- */
 
 @Controller
 public class MovieRentalController {
@@ -74,27 +67,23 @@ public class MovieRentalController {
         this.actorService = actorService;
     }
 
-    // Login form
     @RequestMapping(LOGIN_ENDPOINT)
     public String login() {
         return LOGIN_VIEW;
     }
 
-    // Login form with error
     @RequestMapping(LOGIN_ERROR_ENDPOINT)
     public String loginError(Model model) {
         model.addAttribute("loginError", true);
         return LOGIN_VIEW;
     }
 
-    // Logout
     @RequestMapping(LOGOUT_DONE_ENDPOINT)
     public String logout(Model model) {
         model.addAttribute("logout", true);
         return LOGIN_VIEW;
     }
 
-    // Access denied
     @RequestMapping(ACCESS_DENIED_ENDPOINT)
     public String accessDenied(Model model, Principal user) {
         model.addAttribute("username", user == null ? "" : user.getName());
@@ -109,7 +98,7 @@ public class MovieRentalController {
 
     @RequestMapping(MOVIES_LIST_ENDPOINT)
     public String getFilms(Model model, Pageable pageable, Filters filters, @RequestParam Map<String,String> allRequestParams) {
-        PageWrapper<FilmForm> page = new PageWrapper<>(filmService.getByPredicate(filters, pageable),
+        PageWrapper<FilmDto> page = new PageWrapper<>(filmService.getByPredicate(filters, pageable),
                 MOVIES_LIST_ENDPOINT + generateSearchLink(allRequestParams));
 
         model.addAttribute(PAGE_PARAMETER, page);
@@ -120,27 +109,27 @@ public class MovieRentalController {
 
     @RequestMapping(DETAILS_ENDPOINT)
     public String view(@RequestParam Long id, Model model) {
-        FilmForm film = filmService.findById(id);
+        FilmDto film = filmService.findById(id);
         model.addAttribute(FILM_PARAMETER, film);
         return DETAILS_VIEW;
     }
 
     @RequestMapping(NEW_MOVIE_ENDPOINT)
-    public String view(Model model, FilmForm filmForm) {
+    public String view(Model model, FilmDto filmDto) {
         prepareDictionaries(model);
         return NEW_MOVIE_VIEW;
     }
 
 
     @RequestMapping(value = NEW_MOVIE_ENDPOINT, method = RequestMethod.POST)
-    public String addMovie(Model model, @Validated FilmForm filmForm, BindingResult bindingResult,
+    public String addMovie(Model model, @Validated FilmDto filmDto, BindingResult bindingResult,
                            RedirectAttributes redirectAttributes) {
         if(bindingResult.hasErrors()) {
             prepareDictionaries(model);
             return NEW_MOVIE_VIEW;
         }
 
-        FilmForm filmOutput = filmService.save(filmForm);
+        FilmDto filmOutput = filmService.save(filmDto);
         prepareDictionaries(model);
         redirectAttributes.addAttribute(ID_PARAMETER, filmOutput.getId());
         return REDIRECT_PREFIX + DETAILS_VIEW;
@@ -166,7 +155,7 @@ public class MovieRentalController {
         return link;
     }
 
-    private void addSortParameter(Model model, PageWrapper<FilmForm> page) {
+    private void addSortParameter(Model model, PageWrapper<FilmDto> page) {
         if(page.getPage().getSort() != null) {
             model.addAttribute(PAGE_SORT_PARAMETER, page.getPage().getSort().toString().replaceAll(": ", ","));
         } else {

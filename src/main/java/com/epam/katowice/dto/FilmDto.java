@@ -13,7 +13,7 @@ import java.util.Set;
 /**
  * Created by Wojciech_Soltys on 10.08.2016.
  */
-public class FilmForm {
+public class FilmDto {
 
     private Long id;
 
@@ -52,11 +52,11 @@ public class FilmForm {
         this.rating = rating;
     }
 
-    public FilmForm() {
+    public FilmDto() {
         this.releaseYear = Calendar.getInstance().get(Calendar.YEAR);
     }
 
-    public FilmForm(Long film_id, String title, String description, Integer releaseYear, Integer length, Rating rating) {
+    public FilmDto(Long film_id, String title, String description, Integer releaseYear, Integer length, Rating rating) {
         this.id = film_id;
         this.title = title;
         this.description = description;

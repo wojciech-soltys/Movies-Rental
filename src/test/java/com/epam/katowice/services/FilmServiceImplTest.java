@@ -5,7 +5,7 @@ import com.epam.katowice.controllers.parameters.Filters;
 import com.epam.katowice.dao.FilmRepository;
 import com.epam.katowice.domain.Film;
 import com.epam.katowice.domain.Rating;
-import com.epam.katowice.dto.FilmForm;
+import com.epam.katowice.dto.FilmDto;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -68,35 +68,35 @@ public class FilmServiceImplTest extends MovieRentalTest {
         when(repository.findAll()).thenReturn(Arrays.asList(film1, film2));
 
         // when
-        List<FilmForm> films = filmService.getAllFilms();
+        List<FilmDto> films = filmService.getAllFilms();
 
         // than
         assertThat(films.size()).isEqualTo(2);
 
-        FilmForm filmForm1 = films.get(0);
-        FilmForm filmForm2 = films.get(1);
+        FilmDto filmDto1 = films.get(0);
+        FilmDto filmDto2 = films.get(1);
 
-        EqualsBuilder.reflectionEquals(film1, filmForm1);
+        EqualsBuilder.reflectionEquals(film1, filmDto1);
 
         //Id
-        assertThat(film1.getId()).isEqualTo(filmForm1.getId());
-        assertThat(film2.getId()).isEqualTo(filmForm2.getId());
+        assertThat(film1.getId()).isEqualTo(filmDto1.getId());
+        assertThat(film2.getId()).isEqualTo(filmDto2.getId());
 
         //Title
-        assertThat(film1.getTitle()).isEqualTo(filmForm1.getTitle());
-        assertThat(film2.getTitle()).isEqualTo(filmForm2.getTitle());
+        assertThat(film1.getTitle()).isEqualTo(filmDto1.getTitle());
+        assertThat(film2.getTitle()).isEqualTo(filmDto2.getTitle());
 
         //Description
-        assertThat(film1.getDescription()).isEqualTo(filmForm1.getDescription());
-        assertThat(film2.getDescription()).isEqualTo(filmForm2.getDescription());
+        assertThat(film1.getDescription()).isEqualTo(filmDto1.getDescription());
+        assertThat(film2.getDescription()).isEqualTo(filmDto2.getDescription());
 
         //Release_Year
-        assertThat(film1.getReleaseYear()).isEqualTo(filmForm1.getReleaseYear());
-        assertThat(film2.getReleaseYear()).isEqualTo(filmForm2.getReleaseYear());
+        assertThat(film1.getReleaseYear()).isEqualTo(filmDto1.getReleaseYear());
+        assertThat(film2.getReleaseYear()).isEqualTo(filmDto2.getReleaseYear());
 
         //Length
-        assertThat(film1.getLength()).isEqualTo(filmForm1.getLength());
-        assertThat(film2.getLength()).isEqualTo(filmForm2.getLength());
+        assertThat(film1.getLength()).isEqualTo(filmDto1.getLength());
+        assertThat(film2.getLength()).isEqualTo(filmDto2.getLength());
     }
 
 
@@ -157,7 +157,7 @@ public class FilmServiceImplTest extends MovieRentalTest {
                 .thenReturn(new PageImpl<>(Arrays.asList(film1)));
 
         //when
-        Page<FilmForm> page = filmService.getByPredicate(filters, pageRequest);
+        Page<FilmDto> page = filmService.getByPredicate(filters, pageRequest);
 
         //than
         assertThat(page.getContent().size()).isEqualTo(1);
@@ -180,7 +180,7 @@ public class FilmServiceImplTest extends MovieRentalTest {
                 .thenReturn(new PageImpl<>(Arrays.asList(film2)));
 
         //when
-        Page<FilmForm> page = filmService.getByPredicate(filters, pageRequest);
+        Page<FilmDto> page = filmService.getByPredicate(filters, pageRequest);
 
         //than
         assertThat(page.getContent().size()).isEqualTo(1);
@@ -198,7 +198,7 @@ public class FilmServiceImplTest extends MovieRentalTest {
         when(repository.findById(Mockito.any(Long.class))).thenReturn(Optional.of(film1));
 
         //when
-        FilmForm returnFilm = filmService.findById(1L);
+        FilmDto returnFilm = filmService.findById(1L);
 
         //than
         assertThat(returnFilm.getId()).isEqualTo(film1.getId());
@@ -216,7 +216,7 @@ public class FilmServiceImplTest extends MovieRentalTest {
         when(repository.findById(Mockito.any(Long.class))).thenReturn(Optional.of(film2));
 
         //when
-        FilmForm returnFilm = filmService.findById(2L);
+        FilmDto returnFilm = filmService.findById(2L);
 
         //than
         assertThat(returnFilm.getId()).isEqualTo(film2.getId());
@@ -227,17 +227,17 @@ public class FilmServiceImplTest extends MovieRentalTest {
     public void testSaveFilm() {
         //given
         Film film1 = new Film(1L, "title1", "description1", 2016, new Integer(100), Rating.NC17);
-        FilmForm filmForm1 = new FilmForm(1L, "title1", "description1", 2016, new Integer(100), Rating.NC17);
+        FilmDto filmDto1 = new FilmDto(1L, "title1", "description1", 2016, new Integer(100), Rating.NC17);
 
         when(repository.save(Mockito.any(Film.class))).thenReturn(film1);
 
         //when
-        FilmForm film2 = filmService.save(filmForm1);
+        FilmDto film2 = filmService.save(filmDto1);
 
         //then
-        assertThat(film2.getId()).isEqualTo(filmForm1.getId());
-        assertThat(film2.getTitle()).isEqualTo(filmForm1.getTitle());
-        assertThat(film2.getRating()).isEqualTo(filmForm1.getRating());
+        assertThat(film2.getId()).isEqualTo(filmDto1.getId());
+        assertThat(film2.getTitle()).isEqualTo(filmDto1.getTitle());
+        assertThat(film2.getRating()).isEqualTo(filmDto1.getRating());
     }
 
 }

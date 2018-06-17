@@ -5,6 +5,7 @@ package com.epam.katowice.configuration.security;
  */
 
 import com.epam.katowice.controllers.MovieRentalController;
+import com.epam.katowice.controllers.UserController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -40,6 +41,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .antMatchers(MovieRentalController.NEW_MOVIE_ENDPOINT).hasRole(Role.ADMIN.name())
                     .antMatchers(MovieRentalController.MOVIES_LIST_ENDPOINT).hasAnyRole(Role.USER.name(),Role.ADMIN.name())
                     .antMatchers(MovieRentalController.INDEX_ENDPOINT).permitAll()
+                    .antMatchers(UserController.CREATE_USER_ENDPOINT).permitAll()
                     .and()
                 .formLogin()
                     .loginPage(MovieRentalController.LOGIN_ENDPOINT)

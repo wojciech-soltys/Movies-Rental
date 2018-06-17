@@ -6,7 +6,7 @@
 <body>
 
 <div layout:fragment="content">
-    <form th:action="@{/addMovie}" th:object="${filmForm}" method="post">
+    <form th:action="@{/addMovie}" th:object="${filmDto}" method="post">
         <table style="width:100%">
            <tr>
                <th style="width:100px"><span class="uui-label">Title:</span></th>

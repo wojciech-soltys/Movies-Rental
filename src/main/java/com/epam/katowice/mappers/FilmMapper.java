@@ -1,6 +1,6 @@
 package com.epam.katowice.mappers;
 
-import com.epam.katowice.dto.FilmForm;
+import com.epam.katowice.dto.FilmDto;
 import com.epam.katowice.domain.Film;
 import fr.xebia.extras.selma.Mapper;
 import fr.xebia.extras.selma.Maps;
@@ -11,7 +11,7 @@ import fr.xebia.extras.selma.Maps;
 @Mapper
 public interface FilmMapper {
     @Maps(withIgnoreFields="com.epam.katowice.domain.FilmText.film")
-    FilmForm asFilmDto(Film in);
+    FilmDto asFilmDto(Film in);
     @Maps(withIgnoreFields="com.epam.katowice.domain.FilmText.film")
-    Film asFilm(FilmForm in, Film out);
+    Film asFilm(FilmDto in, Film out);
 }

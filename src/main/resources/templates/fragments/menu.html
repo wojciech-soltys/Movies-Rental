@@ -6,6 +6,11 @@
                     <span>Login</span>
                 </a>
             </li>
+            <li sec:authorize="!isAuthenticated()" th:classappend="${(#httpServletRequest.requestURL.toString().contains('createUser')) ? 'active' : ''}">
+                <a th:href="@{/createUser}">
+                    <span>Register</span>
+                </a>
+            </li>
             <li th:classappend="${(#httpServletRequest.requestURL.toString().contains('index')) ? 'active' : ''}">
                 <a th:href="@{/index}">
                     <span>Index</span>

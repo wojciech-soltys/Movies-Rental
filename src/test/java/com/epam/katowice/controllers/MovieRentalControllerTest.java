@@ -6,7 +6,7 @@ import com.epam.katowice.domain.Actor;
 import com.epam.katowice.domain.Category;
 import com.epam.katowice.domain.Language;
 import com.epam.katowice.domain.Rating;
-import com.epam.katowice.dto.FilmForm;
+import com.epam.katowice.dto.FilmDto;
 import com.epam.katowice.services.ActorService;
 import com.epam.katowice.services.CategoryService;
 import com.epam.katowice.services.FilmService;
@@ -149,7 +149,7 @@ public class MovieRentalControllerTest extends MovieRentalTest {
     @Test
     public void testAddMovie() throws Exception {
         //given, when
-        when(filmService.save(Mockito.any(FilmForm.class))).thenReturn(prepareMovie());
+        when(filmService.save(Mockito.any(FilmDto.class))).thenReturn(prepareMovie());
         prepareDictionaries();
 
         //then
@@ -160,9 +160,9 @@ public class MovieRentalControllerTest extends MovieRentalTest {
                 .andExpect(view().name(NEW_MOVIE_VIEW));
     }
 
-    private FilmForm prepareMovie() {
+    private FilmDto prepareMovie() {
         //given
-        return new FilmForm(1L, "title1", "description1", 2016,
+        return new FilmDto(1L, "title1", "description1", 2016,
                 new Integer(100), Rating.NC17);
     }
 
@@ -209,8 +209,8 @@ public class MovieRentalControllerTest extends MovieRentalTest {
 
     private void prepareListOfMovies() {
         //given
-        FilmForm film1 = new FilmForm(1L, "title1", "description1", 2016, new Integer(100), Rating.NC17);
-        FilmForm film2 = new FilmForm(2L, "title2", "description2", 2016, new Integer(200), Rating.NC17);
+        FilmDto film1 = new FilmDto(1L, "title1", "description1", 2016, new Integer(100), Rating.NC17);
+        FilmDto film2 = new FilmDto(2L, "title2", "description2", 2016, new Integer(200), Rating.NC17);
 
         //when
         when(filmService.getByPredicate(Mockito.any(Filters.class), Mockito.any(Pageable.class))).

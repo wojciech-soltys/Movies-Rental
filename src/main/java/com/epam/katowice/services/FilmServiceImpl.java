@@ -4,7 +4,7 @@ import com.epam.katowice.controllers.parameters.Filters;
 import com.epam.katowice.dao.FilmRepository;
 import com.epam.katowice.domain.Film;
 import com.epam.katowice.domain.specifications.FilmSpecBuilder;
-import com.epam.katowice.dto.FilmForm;
+import com.epam.katowice.dto.FilmDto;
 import com.epam.katowice.mappers.FilmMapper;
 import fr.xebia.extras.selma.Selma;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,25 +36,25 @@ public class FilmServiceImpl implements FilmService {
     }
 
     @Override
-    public List<FilmForm> getAllFilms() {
+    public List<FilmDto> getAllFilms() {
         return filmRepository.findAll().stream().map(mapper::asFilmDto).collect(Collectors.toList());
     }
 
     @Override
-    public Page<FilmForm> getByPredicate(Filters filters, Pageable pageable) {
+    public Page<FilmDto> getByPredicate(Filters filters, Pageable pageable) {
         FilmSpecBuilder filmSpecBuilder = new FilmSpecBuilder();
         Page<Film> entityPage = filmRepository.findAll(filmSpecBuilder.toSpecification(filters), pageable);
-        List<FilmForm> films = entityPage.getContent().stream().map(mapper::asFilmDto).collect(Collectors.toList());
+        List<FilmDto> films = entityPage.getContent().stream().map(mapper::asFilmDto).collect(Collectors.toList());
         return new PageImpl<>(films, pageable, entityPage.getTotalElements());
     }
 
     @Override
-    public FilmForm findById(Long id) {
+    public FilmDto findById(Long id) {
         return mapper.asFilmDto(filmRepository.findById(id).get());
     }
 
     @Override
-    public FilmForm save(FilmForm film) {
+    public FilmDto save(FilmDto film) {
         return mapper.asFilmDto(filmRepository.save(mapper.asFilm(film,new Film())));
     }
 
