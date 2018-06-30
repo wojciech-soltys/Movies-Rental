@@ -61,9 +61,7 @@ public class FilmServiceImplTest extends MovieRentalTest {
     public void testGetAllFilms() {
         // given
         Film film1 = new Film(1L, "title1", "description1", 2016, new Integer(100), Rating.NC17);
-        repository.save(film1);
         Film film2 = new Film(2L, "title2", "description2", 2016, new Integer(200), Rating.NC17);
-        repository.save(film2);
 
         when(repository.findAll()).thenReturn(Arrays.asList(film1, film2));
 
@@ -209,9 +207,9 @@ public class FilmServiceImplTest extends MovieRentalTest {
     public void testFindByIdTwo() {
         //given
         Film film1 = new Film(1L, "title1", "description1", 2016, new Integer(100), Rating.NC17);
-        repository.save(film1);
+        //repository.save(film1);
         Film film2 = new Film(2L, "title2", "description2", 2016, new Integer(200), Rating.NC17);
-        repository.save(film2);
+        //repository.save(film2);
 
         when(repository.findById(Mockito.any(Long.class))).thenReturn(Optional.of(film2));
 

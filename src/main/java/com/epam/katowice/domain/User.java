@@ -33,7 +33,7 @@ public class User {
     private String password;
 
     @Column(name = "enabled")
-    private boolean enabled;
+    private boolean enabled = false;
 
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))

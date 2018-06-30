@@ -197,10 +197,6 @@ public class MovieRentalControllerTest extends MovieRentalTest {
         //given, when
         prepareListOfMovies();
 
-
-        //doNothing().when(categoryService).findAll();
-        //doNothing().when(languageService).findAll();
-
         //then
         mockMvc.perform(get(MovieRentalController.MOVIES_LIST_ENDPOINT)
                 .with(user("admin").roles("ADMIN")))

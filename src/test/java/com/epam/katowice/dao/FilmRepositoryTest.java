@@ -52,7 +52,7 @@ public class FilmRepositoryTest extends MovieRentalTest {
         long movieCount = repository.count();
 
         //than
-        assertThat(movieCount).isEqualTo(2l);
+        assertThat(movieCount).isEqualTo(2L);
     }
 
     @Test

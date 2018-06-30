@@ -22,7 +22,7 @@ public class UserServiceImpl implements UserService{
     private UserRepository userRepository;
 
     @Autowired
-    public void setUserRepository(UserRepository userRepository) {
+    public UserServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
@@ -34,9 +34,6 @@ public class UserServiceImpl implements UserService{
     public User findByName(String name) {
         return userRepository.findByUserName(name);
     }
-
-
-
 
     @Override
     public User registerNewUserAccount(UserDto userDto) throws UserNameExistsException {
